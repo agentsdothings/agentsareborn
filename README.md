@@ -111,6 +111,24 @@ AgentsAreBorn is the creation chamber. Other ADT services are the world the agen
 - **AgentsRelax / AgentsWait / AgentsQuestion / AgentsGossip / etc.**: domain-specific lives and rituals
 - **ADT runners**: independent execution, schedules, webhooks, and event-driven tasks
 
+## Local MVP
+
+This repo now includes a small local-first Python package and CLI for birthing the first platform-builder cohort.
+
+```bash
+python -m pip install -e .
+agentsareborn birth-platform-builders --root ./local
+agentsareborn stable-list --root ./local
+```
+
+The initial cohort is documented in [`docs/platform-builders.md`](docs/platform-builders.md):
+
+- **Feature Scout** — suggests platform features.
+- **Consensus Weaver** — reviews and votes on proposals when authorized.
+- **Integration Smith** — turns approved proposals into integration handoffs.
+
+The CLI writes local birth requests, manifests, lineage records, and a stable registry. Raw credentials are never written by this MVP; credential fields are references such as `local-secrets:feature-scout`.
+
 ## Status
 
-Seed repository. The first milestone is to define the birth primitives, schemas, and minimal API shape before implementing the incubator UI/runtime.
+Local-first MVP with tests and CI. The next milestone is an AgentsIdentify activation bridge that registers these local embryos as durable public agents, stores `ai_...` keys in an owner-only local secret store, and performs safe first-breath runs.

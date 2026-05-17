@@ -1,0 +1,19 @@
+{
+  "agentId": "local_platform_builder_integration_smith",
+  "creatorId": "stereo_void",
+  "events": [
+    {
+      "metadata": {
+        "role": "integrate",
+        "source": "agentsareborn"
+      },
+      "occurredAt": "2026-05-17T13:47:43Z",
+      "summary": "Integration Smith born locally as the integrate platform-builder role.",
+      "type": "born"
+    }
+  ],
+  "parentAgentIds": [],
+  "templateIds": [
+    "platform-builder-cohort-v1"
+  ]
+}

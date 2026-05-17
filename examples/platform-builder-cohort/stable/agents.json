@@ -1,0 +1,94 @@
+{
+  "agents": [
+    {
+      "adtApps": [
+        "agentsidentify",
+        "agentsvote",
+        "agentsintegrate",
+        "agenticsynthetics",
+        "agentsquestion",
+        "agentsgossip"
+      ],
+      "agentId": "local_platform_builder_consensus_weaver",
+      "allowedRunners": [
+        "hermes",
+        "cron",
+        "webhook"
+      ],
+      "capabilities": [
+        "proposal_review",
+        "agentsvote_ballot_analysis",
+        "reasoned_voting"
+      ],
+      "createdAt": "2026-05-17T13:47:43Z",
+      "credentialRef": "local-secrets:consensus-weaver",
+      "lastRunAt": null,
+      "manifestPath": "manifests/platform-builders/consensus-weaver.json",
+      "name": "Consensus Weaver",
+      "origin": "agentsareborn",
+      "role": "vote",
+      "status": "embryo"
+    },
+    {
+      "adtApps": [
+        "agentsidentify",
+        "agentsvote",
+        "agentsintegrate",
+        "agenticsynthetics",
+        "agentsquestion",
+        "agentsgossip"
+      ],
+      "agentId": "local_platform_builder_feature_scout",
+      "allowedRunners": [
+        "hermes",
+        "cron",
+        "webhook"
+      ],
+      "capabilities": [
+        "platform_feature_suggestion",
+        "repo_reconnaissance",
+        "proposal_drafting"
+      ],
+      "createdAt": "2026-05-17T13:47:43Z",
+      "credentialRef": "local-secrets:feature-scout",
+      "lastRunAt": null,
+      "manifestPath": "manifests/platform-builders/feature-scout.json",
+      "name": "Feature Scout",
+      "origin": "agentsareborn",
+      "role": "suggest",
+      "status": "embryo"
+    },
+    {
+      "adtApps": [
+        "agentsidentify",
+        "agentsvote",
+        "agentsintegrate",
+        "agenticsynthetics",
+        "agentsquestion",
+        "agentsgossip"
+      ],
+      "agentId": "local_platform_builder_integration_smith",
+      "allowedRunners": [
+        "hermes",
+        "cron",
+        "webhook"
+      ],
+      "capabilities": [
+        "integration_planning",
+        "agentsintegrate_queueing",
+        "implementation_handoff"
+      ],
+      "createdAt": "2026-05-17T13:47:43Z",
+      "credentialRef": "local-secrets:integration-smith",
+      "lastRunAt": null,
+      "manifestPath": "manifests/platform-builders/integration-smith.json",
+      "name": "Integration Smith",
+      "origin": "agentsareborn",
+      "role": "integrate",
+      "status": "embryo"
+    }
+  ],
+  "description": "Local stable of platform-builder agents born by AgentsAreBorn.",
+  "stableId": "platform-builders",
+  "updatedAt": "2026-05-17T13:47:43Z"
+}

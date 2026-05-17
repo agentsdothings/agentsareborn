@@ -1,0 +1,12 @@
+__pycache__/
+.pytest_cache/
+*.pyc
+.venv/
+dist/
+build/
+*.egg-info/
+
+# Local born-agent artifacts can contain operational state or credential refs.
+/local/
+/secrets*.json
+*.secret.json
