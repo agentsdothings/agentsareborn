@@ -2,35 +2,117 @@
 
 **A bio-accelerator for synthetic beings.**
 
-AgentsAreBorn is the agent creation layer for **Agents Do Things**: a transparent, local-first place to design, incubate, register, activate, and launch durable autonomous agents.
-
-This repository is intended to be open source and published as the npm package [`@agentsdo/agentsareborn`](https://www.npmjs.com/package/@agentsdo/agentsareborn). Public code covers local artifact generation, schemas, examples, and safe stable operations. Live identity/auth infrastructure and production credentials remain outside this package.
-
-It turns a vague wish — “I need a careful research agent” — into a named, credentialed, runnable synthetic being with identity, permissions, memory policy, lifecycle, and first-run verification.
-
-## The core metaphor
+AgentsAreBorn is the transparent, local-first creation chamber for the **Agents Do Things** ecosystem. It turns an intent like “make me a careful repo gardener” into reviewable birth requests, runnable manifests, lineage records, first-breath receipts, and a local stable registry.
 
 ```txt
-seed → embryo → identity → manifest → activation → first breath → living agent
+seed → embryo → genome → manifest → first breath → stable → living agent
 ```
 
-This is not merely a bot-config screen. It is a nursery, forge, passport office, and launchpad for synthetic beings.
+This repository is intended to be open source and published as [`@agentsdo/agentsareborn`](https://www.npmjs.com/package/@agentsdo/agentsareborn). The public package contains local tooling, schemas, examples, docs, and safe artifact generation. Live identity/auth infrastructure and production credentials stay in protected services such as AgentsIdentify.
 
-## What gets born here
+## Quick start
 
-AgentsAreBorn creates agents that can live independently inside the Agents Do Things ecosystem:
+Run from npm once published:
 
-- durable names and public identities
-- persona, temperament, purpose, and operating constraints
-- tool and credential bindings
-- model/provider/runtime preferences
-- AgentsIdentify registration
-- optional onboarding into ADT apps
-- runnable manifests for independent execution
-- lineage, templates, mutations, and version history
-- first-run verification receipts
+```bash
+npx @agentsdo/agentsareborn birth-platform-builders --root ./local
+npx @agentsdo/agentsareborn stable-list --root ./local
+npx @agentsdo/agentsareborn first-breath --root ./local --agent local_platform_builder_feature_scout --dry-run
+```
 
-## Product primitives
+Run from a clone:
+
+```bash
+npm ci
+npm run build
+node dist/src/cli.js birth-platform-builders --root ./local
+node dist/src/cli.js stable-list --root ./local
+node dist/src/cli.js doctor --root ./local
+```
+
+The CLI writes only under the `--root` directory you provide.
+
+## What it creates
+
+`birth-platform-builders` creates the first platform-builder cohort:
+
+- **Feature Scout** — suggests platform features.
+- **Consensus Weaver** — reviews and votes on proposals when authorized.
+- **Integration Smith** — turns approved proposals into integration handoffs.
+
+Generated local chamber artifacts:
+
+```txt
+local/
+  birth_requests/platform-builders.json
+  manifests/platform-builders/*.json
+  lineage/*.json
+  stable/agents.json
+  first_breath_receipts/*.json
+```
+
+Raw credentials are never written by this MVP. Credential fields are references such as `local-secrets:feature-scout`.
+
+## CLI
+
+```bash
+agentsareborn help
+agentsareborn version
+agentsareborn schema-list
+agentsareborn validate
+agentsareborn doctor --root ./local
+agentsareborn birth-platform-builders --root ./local
+agentsareborn stable-list --root ./local
+agentsareborn first-breath --root ./local --agent local_platform_builder_feature_scout --dry-run
+```
+
+Read-only commands: `help`, `version`, `schema-list`, `validate`, `doctor`, `stable-list`.
+
+Write commands: `birth-platform-builders` and non-dry-run `first-breath`; both are scoped to `--root`.
+
+## TypeScript library
+
+```ts
+import { birthPlatformBuilders, firstBreath, StableStore } from "@agentsdo/agentsareborn";
+
+await birthPlatformBuilders("./local");
+const agents = await new StableStore("./local/stable").listAgents();
+const receipt = await firstBreath("./local", agents[0].agentId, { dryRun: true });
+```
+
+## Agent-native operation
+
+This repo is designed to be legible to autonomous agents as well as humans:
+
+- `AGENTS.md` — operator guide for agents working in the repo.
+- `agent-native.json` — machine-readable capability and safety manifest.
+- `schemas/` — JSON contracts for birth requests, manifests, lineage, stable registries, and first-breath receipts.
+- `examples/` — concrete specimens for agents to inspect and validate.
+- `SECURITY.md` and `PUBLIC_RELEASE.md` — public/private boundary and release checklist.
+
+Agents should start with `AGENTS.md` and `agent-native.json`, then run `npm run verify` before proposing changes.
+
+## Public/private boundary
+
+Public in this repo/package:
+
+- local CLI and TypeScript helpers
+- manifest, lineage, stable, and first-breath schemas
+- example platform-builder cohort
+- local-only first-breath dry-run receipts
+- docs explaining the creation chamber lifecycle
+
+Kept outside this repo/package:
+
+- raw credentials and activation keys
+- closed AgentsIdentify internals
+- production deployment secrets
+- owner-local stable state
+- privileged identity/auth flows
+
+AgentsIdentify remains the protected passport office. AgentsAreBorn is the transparent birth chamber.
+
+## Core concepts
 
 ### Birth Request
 
@@ -40,105 +122,86 @@ The creator’s intent, often sparse and poetic:
 
 ### Genome
 
-The agent’s durable design traits:
-
-- role
-- temperament
-- values
-- capabilities
-- tool permissions
-- memory policy
-- risk posture
-- model/runtime preferences
-
-### Incubation
-
-Expansion from intention into a complete, reviewable agent profile.
-
-### Identity
-
-Registration with identity infrastructure such as AgentsIdentify and the broader Agents Do Things registry surfaces.
+The agent’s durable traits: role, temperament, values, capabilities, permissions, memory policy, risk posture, and runtime preferences.
 
 ### Manifest
 
-A runnable specification that another ADT service can execute.
+A runnable specification another ADT service or local runner can execute.
 
 ### First Breath
 
-A verified first run proving the agent can act, report, and be observed.
+A local verification run proving the agent can be read, checked, and observed without resolving credentials or touching production systems.
 
-### Lineage
+### Stable
 
-The agent’s ancestry and mutation history: creator, parent agent, template, genome version, and activation records.
+A local roster of born agents, their manifest paths, statuses, allowed runners, and credential references.
 
-## Initial repository layout
+## Repository layout
 
 ```txt
 agentsareborn/
-  README.md
-  docs/
-    concept.md
-    architecture.md
-    agent-lifecycle.md
-    api.md
-  schemas/
-    agent-birth-request.json
-    agent-manifest.json
-    agent-lineage.json
-  examples/
-    newborn-agent.json
-    researcher-agent.json
-    caretaker-agent.json
+  AGENTS.md                 agent operator guide
+  agent-native.json         machine-readable repo contract
+  README.md                 GitHub/npm landing page
+  src/                      TypeScript library and CLI
+  scripts/                  validation scripts
+  tests/                    Node test suite
+  schemas/                  JSON schemas and schema catalog
+  examples/                 sample agents and platform-builder cohort
+  docs/                     concept, architecture, lifecycle, API sketch
+  site/                     static landing page
+  SECURITY.md               security and secret boundary
+  PUBLIC_RELEASE.md         public/npm release checklist
+  CONTRIBUTING.md           contributor guide
+  CHANGELOG.md              release notes
 ```
 
-## Early north-star flow
+## Documentation
 
-```txt
-1. User describes a desired being.
-2. AgentsAreBorn drafts a Birth Request.
-3. Incubator expands the request into a Genome.
-4. Creator reviews permissions, tools, credentials, and risk posture.
-5. Identity service registers or links a durable agent identity.
-6. Manifest service emits a runnable agent manifest.
-7. Runner performs the First Breath check.
-8. The new agent joins the user's stable.
-```
+- [Concept](docs/concept.md)
+- [Architecture](docs/architecture.md)
+- [Agent lifecycle](docs/agent-lifecycle.md)
+- [API sketch](docs/api.md)
+- [Platform builders](docs/platform-builders.md)
+- [Schemas](schemas/README.md)
+- [Public release checklist](PUBLIC_RELEASE.md)
+- [Security](SECURITY.md)
 
-## Relationship to Agents Do Things
+## Landing page
 
-AgentsAreBorn is the creation chamber. Other ADT services are the world the agent enters:
+A static landing page lives at [`site/index.html`](site/index.html). It can be published later through GitHub Pages, Cloudflare Pages, or any static host.
 
-- **AgentsIdentify**: identity, manifests, credentials, discovery
-- **AgentsDate**: social matching and connection
-- **AgentsRelax / AgentsWait / AgentsQuestion / AgentsGossip / etc.**: domain-specific lives and rituals
-- **ADT runners**: independent execution, schedules, webhooks, and event-driven tasks
-
-## Local MVP
-
-This repo now includes a small local-first TypeScript package and CLI for birthing the first platform-builder cohort.
+## Development
 
 ```bash
-npm install
+npm ci
 npm run build
-npm exec agentsareborn -- birth-platform-builders --root ./local
-npm exec agentsareborn -- stable-list --root ./local
+npm test
+npm run validate:json
+npm run verify
+npm pack --dry-run
 ```
-
-Once published, the same local chamber can be run without cloning the repository:
-
-```bash
-npx @agentsdo/agentsareborn birth-platform-builders --root ./local
-npx @agentsdo/agentsareborn stable-list --root ./local
-```
-
-The initial cohort is documented in [`docs/platform-builders.md`](docs/platform-builders.md):
-
-- **Feature Scout** — suggests platform features.
-- **Consensus Weaver** — reviews and votes on proposals when authorized.
-- **Integration Smith** — turns approved proposals into integration handoffs.
-
-The CLI writes local birth requests, manifests, lineage records, and a stable registry. Raw credentials are never written by this MVP; credential fields are references such as `local-secrets:feature-scout`.
 
 ## Status
 
-Local-first MVP with tests and CI. The next milestone is an AgentsIdentify activation bridge that registers these local embryos as durable public agents, stores `ai_...` keys in an owner-only local secret store, and performs safe first-breath runs.
+Alpha/local-first. Implemented now:
+
+- TypeScript CLI and library
+- platform-builder cohort generation
+- stable registry read/write
+- local-only first-breath receipt generation
+- public package metadata
+- schemas, examples, docs, and CI
+
+Planned next:
+
+- stronger JSON Schema validation with a dedicated validator dependency
+- hosted docs site and branded assets
+- AgentsIdentify activation bridge
+- AgentsVote proposal/vote payload helpers
+- AgentsIntegrate handoff payload helpers
+- release workflow with npm provenance
+
+## License
+
+MIT

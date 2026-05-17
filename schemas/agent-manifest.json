@@ -3,37 +3,153 @@
   "$id": "https://agentsdothings.com/schemas/agentsareborn/agent-manifest.json",
   "title": "Agent Manifest",
   "type": "object",
-  "required": ["agentId", "name", "purpose", "genome", "runtime"],
+  "required": [
+    "agentId",
+    "name",
+    "purpose",
+    "genome",
+    "runtime"
+  ],
   "properties": {
-    "agentId": { "type": "string" },
-    "name": { "type": "string" },
-    "purpose": { "type": "string" },
-    "status": { "type": "string", "enum": ["embryo", "active", "paused", "retired"], "default": "embryo" },
+    "agentId": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "purpose": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "embryo",
+        "active",
+        "paused",
+        "retired"
+      ],
+      "default": "embryo"
+    },
     "genome": {
       "type": "object",
-      "required": ["role", "temperament", "capabilities", "permissions"],
+      "required": [
+        "role",
+        "temperament",
+        "capabilities",
+        "permissions"
+      ],
       "properties": {
-        "role": { "type": "string" },
-        "temperament": { "type": "array", "items": { "type": "string" } },
-        "values": { "type": "array", "items": { "type": "string" } },
-        "capabilities": { "type": "array", "items": { "type": "string" } },
-        "permissions": { "type": "array", "items": { "type": "string" } },
-        "memoryPolicy": { "type": "string" },
-        "riskPosture": { "type": "string" }
+        "role": {
+          "type": "string"
+        },
+        "temperament": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "capabilities": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "permissions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "memoryPolicy": {
+          "type": "string"
+        },
+        "riskPosture": {
+          "type": "string"
+        },
+        "platformBuilderRole": {
+          "type": "string",
+          "enum": [
+            "suggest",
+            "vote",
+            "integrate"
+          ]
+        }
       },
       "additionalProperties": true
     },
     "runtime": {
       "type": "object",
       "properties": {
-        "provider": { "type": "string" },
-        "model": { "type": "string" },
-        "tools": { "type": "array", "items": { "type": "string" } }
+        "provider": {
+          "type": "string"
+        },
+        "model": {
+          "type": "string"
+        },
+        "tools": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
       },
       "additionalProperties": true
     },
-    "identity": { "type": "object", "additionalProperties": true },
-    "createdAt": { "type": "string", "format": "date-time" }
+    "identity": {
+      "type": "object",
+      "properties": {
+        "registry": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "credentialRef": {
+          "type": "string",
+          "pattern": "^local-secrets:[a-z0-9][a-z0-9-]*$"
+        }
+      },
+      "additionalProperties": true
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "adtApps": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "firstBreath": {
+      "type": "object",
+      "required": [
+        "task",
+        "requiresNetwork",
+        "expectedReceipt"
+      ],
+      "properties": {
+        "task": {
+          "type": "string"
+        },
+        "requiresNetwork": {
+          "type": "boolean"
+        },
+        "expectedReceipt": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": true
+    }
   },
   "additionalProperties": true
 }

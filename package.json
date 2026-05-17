@@ -8,7 +8,7 @@
   "homepage": "https://github.com/agentsdothings/agentsareborn#readme",
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/agentsdothings/agentsareborn.git"
+    "url": "git+https://github.com/agentsdothings/agentsareborn.git"
   },
   "bugs": {
     "url": "https://github.com/agentsdothings/agentsareborn/issues"
@@ -36,20 +36,32 @@
       "types": "./dist/src/stable.d.ts",
       "import": "./dist/src/stable.js"
     },
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./first-breath": {
+      "types": "./dist/src/first-breath.d.ts",
+      "import": "./dist/src/first-breath.js"
+    }
   },
   "bin": {
     "agentsareborn": "dist/src/cli.js"
   },
   "files": [
     "dist/src/",
+    "dist/scripts/",
+    "src/",
     "schemas/",
     "examples/",
     "docs/",
+    "site/",
+    "agent-native.json",
     "README.md",
     "LICENSE",
     "SECURITY.md",
-    "PUBLIC_RELEASE.md"
+    "PUBLIC_RELEASE.md",
+    "CONTRIBUTING.md",
+    "CODE_OF_CONDUCT.md",
+    "CHANGELOG.md",
+    "AGENTS.md"
   ],
   "publishConfig": {
     "access": "public"
@@ -63,10 +75,13 @@
     "validate:json": "node dist/scripts/validate-json.js",
     "verify": "npm test && npm run validate:json",
     "prepack": "npm run verify",
-    "prepublishOnly": "npm run verify"
+    "prepublishOnly": "npm run verify",
+    "pack:dry-run": "npm pack --dry-run",
+    "smoke:package": "npm run build && node -e \"import('./dist/src/index.js').then(m=>{ if (!m.birthPlatformBuilders || !m.firstBreath || !m.StableStore) process.exit(1) })\" && test \"$(node dist/src/cli.js version)\" = \"0.1.0\""
   },
   "devDependencies": {
     "@types/node": "^22.10.0",
     "typescript": "^5.7.0"
-  }
+  },
+  "sideEffects": false
 }

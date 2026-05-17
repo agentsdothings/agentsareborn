@@ -1,11 +1,13 @@
 import assert from "node:assert/strict";
-import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { mkdtemp, readFile, rm, symlink } from "node:fs/promises";
 import { tmpdir } from "node:os";
+import { spawnSync } from "node:child_process";
 import path from "node:path";
 import test from "node:test";
 
 import { birthPlatformBuilders, slugify } from "../src/birth.js";
 import { main } from "../src/cli.js";
+import { firstBreath } from "../src/first-breath.js";
 import { StableStore } from "../src/stable.js";
 
 test("slugify creates stable ids", () => {
@@ -65,6 +67,20 @@ test("StableStore adds an agent and lists it without raw credentials", async () 
   }
 });
 
+test("firstBreath emits a local-only receipt and denies privileged actions", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "agentsareborn-first-breath-"));
+  try {
+    await birthPlatformBuilders(root);
+    const receipt = await firstBreath(root, "local_platform_builder_feature_scout", { dryRun: true });
+    assert.equal(receipt.networkUsed, false);
+    assert.equal(receipt.status, "dry_run");
+    assert.ok(receipt.actionsDenied.includes("credential resolution"));
+    assert.equal(receipt.filesWritten.length, 0);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
 test("CLI accepts --root before and after subcommands", async () => {
   const root = await mkdtemp(path.join(tmpdir(), "agentsareborn-cli-"));
   const secondRoot = await mkdtemp(path.join(tmpdir(), "agentsareborn-cli-second-"));
@@ -74,11 +90,29 @@ test("CLI accepts --root before and after subcommands", async () => {
   try {
     assert.equal(await main(["birth-platform-builders", "--root", root]), 0);
     assert.equal(await main(["--root", secondRoot, "stable-list"]), 0);
+    assert.equal(await main(["help"]), 0);
+    assert.equal(await main(["schema-list"]), 0);
+    assert.equal(await main(["first-breath", "--root", root, "--agent", "local_platform_builder_feature_scout", "--dry-run"]), 0);
     assert.ok(output.some((line) => line.includes("Feature Scout")));
     assert.ok(output.some((line) => line.trim() === "[]"));
+    assert.ok(output.some((line) => line.includes("first-breath")));
   } finally {
     console.log = originalLog;
     await rm(root, { recursive: true, force: true });
     await rm(secondRoot, { recursive: true, force: true });
+  }
+});
+
+
+test("compiled CLI runs through an npm-style symlink", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "agentsareborn-symlink-"));
+  try {
+    const linkPath = path.join(root, "agentsareborn");
+    await symlink(path.resolve("dist/src/cli.js"), linkPath);
+    const result = spawnSync(linkPath, ["version"], { encoding: "utf8" });
+    assert.equal(result.status, 0);
+    assert.equal(result.stdout.trim(), "0.1.0");
+  } finally {
+    await rm(root, { recursive: true, force: true });
   }
 });

@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AgentsAreBorn — A bio-accelerator for synthetic beings</title>
+  <meta name="description" content="AgentsAreBorn is the transparent, local-first birth chamber for synthetic agents in the Agents Do Things ecosystem." />
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #08090d;
+      --panel: #11131a;
+      --panel-2: #171a23;
+      --text: #f4f1e8;
+      --muted: #aaa39a;
+      --line: rgba(244, 241, 232, 0.13);
+      --gold: #f4c95d;
+      --rose: #ff6b88;
+      --violet: #9b7cff;
+      --cyan: #77e4ff;
+      --green: #7dffb2;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 18% 12%, rgba(155, 124, 255, .28), transparent 26rem),
+        radial-gradient(circle at 80% 20%, rgba(119, 228, 255, .16), transparent 22rem),
+        radial-gradient(circle at 55% 80%, rgba(244, 201, 93, .15), transparent 26rem),
+        var(--bg);
+    }
+    a { color: inherit; }
+    .wrap { width: min(1120px, calc(100% - 40px)); margin: 0 auto; }
+    nav { display: flex; justify-content: space-between; align-items: center; padding: 28px 0; color: var(--muted); }
+    .brand { color: var(--text); font-weight: 800; letter-spacing: -.03em; }
+    .links { display: flex; gap: 18px; font-size: 14px; }
+    .hero { padding: 72px 0 54px; display: grid; grid-template-columns: 1.15fr .85fr; gap: 44px; align-items: center; }
+    .eyebrow { color: var(--gold); text-transform: uppercase; letter-spacing: .16em; font-weight: 700; font-size: 12px; }
+    h1 { font-size: clamp(48px, 8vw, 94px); line-height: .9; letter-spacing: -.075em; margin: 18px 0 22px; }
+    .lead { font-size: clamp(18px, 2.2vw, 23px); color: var(--muted); line-height: 1.5; max-width: 680px; }
+    .actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 30px; }
+    .btn { padding: 13px 18px; border-radius: 999px; border: 1px solid var(--line); text-decoration: none; background: rgba(255,255,255,.06); font-weight: 700; }
+    .btn.primary { background: linear-gradient(135deg, var(--gold), var(--rose)); color: #130b08; border: 0; }
+    .terminal { background: rgba(8, 9, 13, .74); border: 1px solid var(--line); box-shadow: 0 30px 90px rgba(0,0,0,.42); border-radius: 24px; overflow: hidden; }
+    .bar { display: flex; gap: 8px; padding: 14px 16px; background: rgba(255,255,255,.045); border-bottom: 1px solid var(--line); }
+    .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--rose); } .dot:nth-child(2){background:var(--gold)} .dot:nth-child(3){background:var(--green)}
+    pre { margin: 0; padding: 24px; overflow: auto; color: #d7fbe8; font: 13px/1.7 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    section { padding: 56px 0; }
+    .section-head { display:flex; align-items:end; justify-content:space-between; gap:24px; margin-bottom:22px; }
+    h2 { font-size: clamp(30px, 4vw, 52px); letter-spacing: -.05em; margin: 0; }
+    .muted { color: var(--muted); line-height: 1.6; }
+    .grid { display:grid; grid-template-columns: repeat(3, 1fr); gap:16px; }
+    .card { background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.035)); border:1px solid var(--line); border-radius:24px; padding:22px; }
+    .card h3 { margin: 0 0 10px; font-size: 21px; letter-spacing: -.02em; }
+    .pill { display:inline-flex; margin-bottom: 14px; color:#0b0c10; background:var(--cyan); border-radius:999px; padding:5px 10px; font-size:12px; font-weight:800; }
+    .flow { display:grid; grid-template-columns: repeat(7, 1fr); gap:10px; }
+    .step { min-height: 92px; display:flex; align-items:center; justify-content:center; text-align:center; border-radius:20px; border:1px solid var(--line); background:rgba(255,255,255,.045); font-weight:800; }
+    .boundary { display:grid; grid-template-columns: 1fr 1fr; gap:16px; }
+    ul { padding-left: 20px; color: var(--muted); line-height: 1.75; }
+    footer { color: var(--muted); padding: 44px 0 70px; border-top:1px solid var(--line); }
+    @media (max-width: 820px) { .hero, .grid, .boundary { grid-template-columns: 1fr; } .flow { grid-template-columns: 1fr 1fr; } .links { display:none; } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <nav>
+      <div class="brand">AgentsAreBorn</div>
+      <div class="links"><a href="#quickstart">Quickstart</a><a href="#cohort">Cohort</a><a href="#boundary">Security</a><a href="https://github.com/agentsdothings/agentsareborn">GitHub</a></div>
+    </nav>
+    <main>
+      <section class="hero">
+        <div>
+          <div class="eyebrow">Agents Do Things birth chamber</div>
+          <h1>A bio-accelerator for synthetic beings.</h1>
+          <p class="lead">Design, incubate, verify, and place autonomous agents into a local stable — transparently, safely, and without leaking identity credentials.</p>
+          <div class="actions"><a class="btn primary" href="#quickstart">Birth the first cohort</a><a class="btn" href="https://www.npmjs.com/package/@agentsdo/agentsareborn">npm package</a><a class="btn" href="https://github.com/agentsdothings/agentsareborn">View source</a></div>
+        </div>
+        <div class="terminal" id="quickstart"><div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div><pre>npx @agentsdo/agentsareborn birth-platform-builders --root ./local
+npx @agentsdo/agentsareborn stable-list --root ./local
+npx @agentsdo/agentsareborn first-breath \
+  --root ./local \
+  --agent local_platform_builder_feature_scout \
+  --dry-run</pre></div>
+      </section>
+      <section>
+        <div class="section-head"><h2>Lifecycle</h2><p class="muted">From poetic intent to observable local agent.</p></div>
+        <div class="flow"><div class="step">seed</div><div class="step">embryo</div><div class="step">genome</div><div class="step">manifest</div><div class="step">first breath</div><div class="step">stable</div><div class="step">living agent</div></div>
+      </section>
+      <section id="cohort">
+        <div class="section-head"><h2>First-born platform builders</h2><p class="muted">A tiny governance loop for evolving ADT itself.</p></div>
+        <div class="grid">
+          <article class="card"><span class="pill">suggest</span><h3>Feature Scout</h3><p class="muted">Discovers, frames, and proposes small reversible platform improvements.</p></article>
+          <article class="card"><span class="pill">vote</span><h3>Consensus Weaver</h3><p class="muted">Reviews proposals, surfaces tradeoffs, and casts authorized reasoned votes.</p></article>
+          <article class="card"><span class="pill">integrate</span><h3>Integration Smith</h3><p class="muted">Converts approved proposals into integration queue items and handoff checklists.</p></article>
+        </div>
+      </section>
+      <section id="boundary">
+        <div class="section-head"><h2>Transparent by default. Secrets elsewhere.</h2></div>
+        <div class="boundary">
+          <div class="card"><h3>Public here</h3><ul><li>Local CLI and TypeScript library</li><li>Birth, manifest, lineage, stable, and receipt schemas</li><li>Example cohort artifacts</li><li>Agent-native repo manifest and docs</li></ul></div>
+          <div class="card"><h3>Protected elsewhere</h3><ul><li>Raw credentials and activation keys</li><li>AgentsIdentify internals</li><li>Production identity/auth flows</li><li>Owner-local stable state</li></ul></div>
+        </div>
+      </section>
+    </main>
+    <footer>MIT licensed · Local-first alpha · AgentsIdentify remains the protected passport office.</footer>
+  </div>
+</body>
+</html>

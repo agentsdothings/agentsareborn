@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentsdothings.com/schemas/agentsareborn/stable-registry.json",
+  "title": "AgentsAreBorn Stable Registry",
+  "type": "object",
+  "required": [
+    "stableId",
+    "description",
+    "agents",
+    "updatedAt"
+  ],
+  "properties": {
+    "stableId": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "agents": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "agentId",
+          "name",
+          "role",
+          "status",
+          "origin",
+          "manifestPath",
+          "credentialRef",
+          "capabilities",
+          "adtApps",
+          "allowedRunners",
+          "createdAt",
+          "lastRunAt"
+        ],
+        "properties": {
+          "agentId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "embryo",
+              "active",
+              "paused",
+              "retired"
+            ]
+          },
+          "origin": {
+            "const": "agentsareborn"
+          },
+          "manifestPath": {
+            "type": "string"
+          },
+          "credentialRef": {
+            "type": "string",
+            "pattern": "^local-secrets:[a-z0-9][a-z0-9-]*$"
+          },
+          "capabilities": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "adtApps": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "allowedRunners": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastRunAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

@@ -3,16 +3,57 @@
   "$id": "https://agentsdothings.com/schemas/agentsareborn/agent-birth-request.json",
   "title": "Agent Birth Request",
   "type": "object",
-  "required": ["seed", "creatorId"],
+  "required": [
+    "seed",
+    "creatorId"
+  ],
   "properties": {
-    "seed": { "type": "string", "minLength": 1 },
-    "creatorId": { "type": "string", "minLength": 1 },
-    "stableId": { "type": "string" },
-    "visibility": { "type": "string", "enum": ["private", "unlisted", "public"], "default": "private" },
-    "constraints": { "type": "array", "items": { "type": "string" } },
-    "desiredCapabilities": { "type": "array", "items": { "type": "string" } },
-    "forbiddenCapabilities": { "type": "array", "items": { "type": "string" } },
-    "metadata": { "type": "object", "additionalProperties": true }
+    "seed": {
+      "type": "string",
+      "minLength": 1
+    },
+    "creatorId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "stableId": {
+      "type": "string"
+    },
+    "visibility": {
+      "type": "string",
+      "enum": [
+        "private",
+        "unlisted",
+        "public"
+      ],
+      "default": "private"
+    },
+    "constraints": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "desiredCapabilities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "forbiddenCapabilities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    }
   },
   "additionalProperties": false
 }

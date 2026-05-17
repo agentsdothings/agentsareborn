@@ -1,0 +1,61 @@
+{
+  "$schema": "https://agentsdothings.com/schemas/agent-native-repo.json",
+  "name": "AgentsAreBorn",
+  "package": "@agentsdo/agentsareborn",
+  "purpose": "Local-first birth chamber for synthetic agents in the Agents Do Things ecosystem.",
+  "status": "alpha",
+  "publicBoundary": {
+    "open": [
+      "local CLI",
+      "TypeScript types",
+      "schemas",
+      "examples",
+      "docs",
+      "safe first-breath dry runs"
+    ],
+    "closed": [
+      "AgentsIdentify internals",
+      "raw credentials",
+      "production activation tokens",
+      "owner-local secrets"
+    ]
+  },
+  "safeCommands": [
+    "npm run verify",
+    "npm pack --dry-run",
+    "node dist/src/cli.js help",
+    "node dist/src/cli.js schema-list",
+    "node dist/src/cli.js stable-list --root examples/platform-builder-cohort",
+    "node dist/src/cli.js doctor --root examples/platform-builder-cohort"
+  ],
+  "writeCommands": [
+    {
+      "command": "node dist/src/cli.js birth-platform-builders --root ./local",
+      "writesTo": [
+        "birth_requests/",
+        "manifests/",
+        "lineage/",
+        "stable/"
+      ]
+    },
+    {
+      "command": "node dist/src/cli.js first-breath --root ./local --agent <agentId>",
+      "writesTo": [
+        "first_breath_receipts/"
+      ]
+    }
+  ],
+  "schemas": {
+    "birthRequest": "schemas/agent-birth-request.json",
+    "manifest": "schemas/agent-manifest.json",
+    "lineage": "schemas/agent-lineage.json",
+    "stableRegistry": "schemas/stable-registry.json",
+    "firstBreathReceipt": "schemas/first-breath-receipt.json"
+  },
+  "examples": {
+    "platformBuilderCohort": "examples/platform-builder-cohort",
+    "stable": "examples/platform-builder-cohort/stable/agents.json"
+  },
+  "defaultStatePath": "./local",
+  "secretPolicy": "Use local-secrets:* references only; never store raw secret values in repo artifacts."
+}

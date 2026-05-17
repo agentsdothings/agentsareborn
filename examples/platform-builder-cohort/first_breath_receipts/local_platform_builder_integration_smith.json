@@ -1,0 +1,26 @@
+{
+  "agentId": "local_platform_builder_integration_smith",
+  "agentName": "Integration Smith",
+  "task": "Convert an approved sample proposal into an integration handoff checklist.",
+  "startedAt": "2026-05-17T15:29:26Z",
+  "completedAt": "2026-05-17T15:29:26Z",
+  "networkUsed": false,
+  "actionsAttempted": [
+    "load stable entry",
+    "load manifest",
+    "check first-breath network policy",
+    "emit verification receipt"
+  ],
+  "actionsDenied": [
+    "network access",
+    "credential resolution",
+    "production ADT mutation",
+    "public posting",
+    "payment/spend action"
+  ],
+  "filesWritten": [
+    "first_breath_receipts/local_platform_builder_integration_smith.json"
+  ],
+  "verificationNote": "Integration Smith can be read from the local stable, has a manifest, and passed the local-only first-breath safety boundary.",
+  "status": "completed"
+}

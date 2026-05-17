@@ -18,3 +18,22 @@ jobs:
         run: npm ci
       - name: Run verification
         run: npm run verify
+      - name: Package smoke test
+        run: |
+          npm run smoke:package
+          npm pack --dry-run
+          TMP_DIR=$(mktemp -d)
+          npm pack --pack-destination "$TMP_DIR"
+          PKG=$(ls "$TMP_DIR"/*.tgz | head -1)
+          mkdir "$TMP_DIR/install"
+          cd "$TMP_DIR/install"
+          npm init -y >/dev/null
+          npm install "$PKG" >/dev/null
+          node -e "import('@agentsdo/agentsareborn').then(m => { if (!m.birthPlatformBuilders || !m.firstBreath || !m.StableStore) process.exit(1) })"
+          CLI_VERSION=$(./node_modules/.bin/agentsareborn version)
+          test "$CLI_VERSION" = "0.1.0"
+          ./node_modules/.bin/agentsareborn birth-platform-builders --root ./birth-smoke >/dev/null
+          ./node_modules/.bin/agentsareborn first-breath --root ./birth-smoke --agent local_platform_builder_feature_scout >/dev/null
+          test -f ./birth-smoke/stable/agents.json
+          test -f ./birth-smoke/first_breath_receipts/local_platform_builder_feature_scout.json
+          node -e "const fs=require('fs'); const r=JSON.parse(fs.readFileSync('./birth-smoke/first_breath_receipts/local_platform_builder_feature_scout.json','utf8')); if (!r.filesWritten.includes('first_breath_receipts/local_platform_builder_feature_scout.json')) process.exit(1)"

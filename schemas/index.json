@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "name": "AgentsAreBorn schema catalog",
+  "schemas": {
+    "birthRequest": "schemas/agent-birth-request.json",
+    "manifest": "schemas/agent-manifest.json",
+    "lineage": "schemas/agent-lineage.json",
+    "stableRegistry": "schemas/stable-registry.json",
+    "firstBreathReceipt": "schemas/first-breath-receipt.json"
+  }
+}

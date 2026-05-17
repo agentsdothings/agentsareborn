@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentsdothings.com/schemas/agentsareborn/first-breath-receipt.json",
+  "title": "First Breath Receipt",
+  "type": "object",
+  "required": [
+    "agentId",
+    "agentName",
+    "task",
+    "startedAt",
+    "completedAt",
+    "networkUsed",
+    "actionsAttempted",
+    "actionsDenied",
+    "filesWritten",
+    "verificationNote",
+    "status"
+  ],
+  "properties": {
+    "agentId": {
+      "type": "string"
+    },
+    "agentName": {
+      "type": "string"
+    },
+    "task": {
+      "type": "string"
+    },
+    "startedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "completedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "networkUsed": {
+      "type": "boolean"
+    },
+    "actionsAttempted": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "actionsDenied": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "filesWritten": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "verificationNote": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "dry_run",
+        "completed"
+      ]
+    }
+  },
+  "additionalProperties": false
+}

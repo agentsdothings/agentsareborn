@@ -8,7 +8,7 @@
   "events": [
     {
       "type": "born",
-      "occurredAt": "2026-05-17T13:55:56Z",
+      "occurredAt": "2026-05-17T15:29:26Z",
       "summary": "Consensus Weaver born locally as the vote platform-builder role.",
       "metadata": {
         "source": "agentsareborn",
