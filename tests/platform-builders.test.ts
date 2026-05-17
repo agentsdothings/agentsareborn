@@ -109,7 +109,7 @@ test("compiled CLI runs through an npm-style symlink", async () => {
   try {
     const linkPath = path.join(root, "agentsareborn");
     await symlink(path.resolve("dist/src/cli.js"), linkPath);
-    const result = spawnSync(linkPath, ["version"], { encoding: "utf8" });
+    const result = spawnSync(process.execPath, [linkPath, "version"], { encoding: "utf8" });
     assert.equal(result.status, 0);
     assert.equal(result.stdout.trim(), "0.1.0");
   } finally {
