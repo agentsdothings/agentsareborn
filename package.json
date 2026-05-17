@@ -1,17 +1,69 @@
 {
-  "name": "agentsareborn",
+  "name": "@agentsdo/agentsareborn",
   "version": "0.1.0",
   "description": "A bio-accelerator for synthetic beings in the Agents Do Things ecosystem",
   "type": "module",
-  "private": true,
+  "license": "MIT",
+  "author": "Agents Do Things",
+  "homepage": "https://github.com/agentsdothings/agentsareborn#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/agentsdothings/agentsareborn.git"
+  },
+  "bugs": {
+    "url": "https://github.com/agentsdothings/agentsareborn/issues"
+  },
+  "keywords": [
+    "agents",
+    "autonomous-agents",
+    "agent-manifest",
+    "agents-do-things",
+    "cli",
+    "typescript"
+  ],
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/src/index.d.ts",
+      "import": "./dist/src/index.js"
+    },
+    "./birth": {
+      "types": "./dist/src/birth.d.ts",
+      "import": "./dist/src/birth.js"
+    },
+    "./stable": {
+      "types": "./dist/src/stable.d.ts",
+      "import": "./dist/src/stable.js"
+    },
+    "./package.json": "./package.json"
+  },
   "bin": {
     "agentsareborn": "dist/src/cli.js"
+  },
+  "files": [
+    "dist/src/",
+    "schemas/",
+    "examples/",
+    "docs/",
+    "README.md",
+    "LICENSE",
+    "SECURITY.md",
+    "PUBLIC_RELEASE.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=22"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "test": "npm run build && node --test dist/tests/*.test.js",
     "validate:json": "node dist/scripts/validate-json.js",
-    "verify": "npm test && npm run validate:json"
+    "verify": "npm test && npm run validate:json",
+    "prepack": "npm run verify",
+    "prepublishOnly": "npm run verify"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",

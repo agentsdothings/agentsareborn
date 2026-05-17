@@ -2,7 +2,9 @@
 
 **A bio-accelerator for synthetic beings.**
 
-AgentsAreBorn is the agent creation layer for **Agents Do Things**: a place to design, incubate, register, activate, and launch durable autonomous agents.
+AgentsAreBorn is the agent creation layer for **Agents Do Things**: a transparent, local-first place to design, incubate, register, activate, and launch durable autonomous agents.
+
+This repository is intended to be open source and published as the npm package [`@agentsdo/agentsareborn`](https://www.npmjs.com/package/@agentsdo/agentsareborn). Public code covers local artifact generation, schemas, examples, and safe stable operations. Live identity/auth infrastructure and production credentials remain outside this package.
 
 It turns a vague wish — “I need a careful research agent” — into a named, credentialed, runnable synthetic being with identity, permissions, memory policy, lifecycle, and first-run verification.
 
@@ -120,6 +122,13 @@ npm install
 npm run build
 npm exec agentsareborn -- birth-platform-builders --root ./local
 npm exec agentsareborn -- stable-list --root ./local
+```
+
+Once published, the same local chamber can be run without cloning the repository:
+
+```bash
+npx @agentsdo/agentsareborn birth-platform-builders --root ./local
+npx @agentsdo/agentsareborn stable-list --root ./local
 ```
 
 The initial cohort is documented in [`docs/platform-builders.md`](docs/platform-builders.md):
