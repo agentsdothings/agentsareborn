@@ -113,12 +113,13 @@ AgentsAreBorn is the creation chamber. Other ADT services are the world the agen
 
 ## Local MVP
 
-This repo now includes a small local-first Python package and CLI for birthing the first platform-builder cohort.
+This repo now includes a small local-first TypeScript package and CLI for birthing the first platform-builder cohort.
 
 ```bash
-python -m pip install -e .
-agentsareborn birth-platform-builders --root ./local
-agentsareborn stable-list --root ./local
+npm install
+npm run build
+npm exec agentsareborn -- birth-platform-builders --root ./local
+npm exec agentsareborn -- stable-list --root ./local
 ```
 
 The initial cohort is documented in [`docs/platform-builders.md`](docs/platform-builders.md):

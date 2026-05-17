@@ -1,19 +1,19 @@
 {
   "agentId": "local_platform_builder_consensus_weaver",
   "creatorId": "stereo_void",
-  "events": [
-    {
-      "metadata": {
-        "role": "vote",
-        "source": "agentsareborn"
-      },
-      "occurredAt": "2026-05-17T13:47:43Z",
-      "summary": "Consensus Weaver born locally as the vote platform-builder role.",
-      "type": "born"
-    }
-  ],
   "parentAgentIds": [],
   "templateIds": [
     "platform-builder-cohort-v1"
+  ],
+  "events": [
+    {
+      "type": "born",
+      "occurredAt": "2026-05-17T13:55:56Z",
+      "summary": "Consensus Weaver born locally as the vote platform-builder role.",
+      "metadata": {
+        "source": "agentsareborn",
+        "role": "vote"
+      }
+    }
   ]
 }

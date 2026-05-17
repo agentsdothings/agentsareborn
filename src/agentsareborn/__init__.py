@@ -1,4 +1,0 @@
-"""AgentsAreBorn: local-first birth chamber for synthetic beings."""
-
-__all__ = ["__version__"]
-__version__ = "0.1.0"

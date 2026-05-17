@@ -1,17 +1,17 @@
 {
+  "seed": "Create the first born agents as platform builders who suggest, vote, and integrate platform features.",
+  "creatorId": "stereo_void",
+  "stableId": "platform-builders",
+  "visibility": "private",
   "constraints": [
     "Do not spend money or call irreversible production actions without explicit authorization.",
     "Prefer reversible proposal, vote, and integration-draft actions first.",
     "Store raw credentials only in owner-only local secrets, never in git."
   ],
-  "createdAt": "2026-05-17T13:47:43Z",
-  "creatorId": "stereo_void",
   "desiredCapabilities": [
     "feature_suggestion",
     "proposal_voting",
     "platform_integration"
   ],
-  "seed": "Create the first born agents as platform builders who suggest, vote, and integrate platform features.",
-  "stableId": "platform-builders",
-  "visibility": "private"
+  "createdAt": "2026-05-17T13:55:56Z"
 }

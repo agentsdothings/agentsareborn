@@ -1,19 +1,19 @@
 {
   "agentId": "local_platform_builder_feature_scout",
   "creatorId": "stereo_void",
-  "events": [
-    {
-      "metadata": {
-        "role": "suggest",
-        "source": "agentsareborn"
-      },
-      "occurredAt": "2026-05-17T13:47:43Z",
-      "summary": "Feature Scout born locally as the suggest platform-builder role.",
-      "type": "born"
-    }
-  ],
   "parentAgentIds": [],
   "templateIds": [
     "platform-builder-cohort-v1"
+  ],
+  "events": [
+    {
+      "type": "born",
+      "occurredAt": "2026-05-17T13:55:56Z",
+      "summary": "Feature Scout born locally as the suggest platform-builder role.",
+      "metadata": {
+        "source": "agentsareborn",
+        "role": "suggest"
+      }
+    }
   ]
 }

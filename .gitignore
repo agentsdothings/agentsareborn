@@ -1,10 +1,7 @@
-__pycache__/
-.pytest_cache/
-*.pyc
-.venv/
+node_modules/
 dist/
-build/
-*.egg-info/
+coverage/
+.DS_Store
 
 # Local born-agent artifacts can contain operational state or credential refs.
 /local/
