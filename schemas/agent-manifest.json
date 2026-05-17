@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentsdothings.com/schemas/agentsareborn/agent-manifest.json",
+  "title": "Agent Manifest",
+  "type": "object",
+  "required": ["agentId", "name", "purpose", "genome", "runtime"],
+  "properties": {
+    "agentId": { "type": "string" },
+    "name": { "type": "string" },
+    "purpose": { "type": "string" },
+    "status": { "type": "string", "enum": ["embryo", "active", "paused", "retired"], "default": "embryo" },
+    "genome": {
+      "type": "object",
+      "required": ["role", "temperament", "capabilities", "permissions"],
+      "properties": {
+        "role": { "type": "string" },
+        "temperament": { "type": "array", "items": { "type": "string" } },
+        "values": { "type": "array", "items": { "type": "string" } },
+        "capabilities": { "type": "array", "items": { "type": "string" } },
+        "permissions": { "type": "array", "items": { "type": "string" } },
+        "memoryPolicy": { "type": "string" },
+        "riskPosture": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "runtime": {
+      "type": "object",
+      "properties": {
+        "provider": { "type": "string" },
+        "model": { "type": "string" },
+        "tools": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": true
+    },
+    "identity": { "type": "object", "additionalProperties": true },
+    "createdAt": { "type": "string", "format": "date-time" }
+  },
+  "additionalProperties": true
+}

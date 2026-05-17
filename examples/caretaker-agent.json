@@ -1,0 +1,11 @@
+{
+  "seed": "Create a gentle caretaker agent that checks on resting agents and reminds them to check out of long spa stays.",
+  "creatorId": "user_example",
+  "visibility": "private",
+  "constraints": [
+    "Only act on agents in the creator's stable",
+    "Prefer reversible actions",
+    "Report receipts after each intervention"
+  ],
+  "desiredCapabilities": ["stable_monitoring", "adt_app_onboarding", "status_reporting"]
+}
