@@ -44,7 +44,8 @@ Responsibilities:
 
 - verify runtime can launch the agent
 - test tool access only within granted scopes
-- produce an activation report
+- produce an activation report with role-specific `taskOutput`
+- update local stable run metadata for non-dry-run executions
 - add the agent to the creator's stable
 
 ## Data flow

@@ -132,7 +132,7 @@ A runnable specification another ADT service or local runner can execute.
 
 ### First Breath
 
-A local verification run proving the agent can be read, checked, and observed without resolving credentials or touching production systems.
+A local verification run proving the agent can be read, checked, and observed without resolving credentials or touching production systems. Current first-breath receipts also include `taskOutput`, so a local run captures the agent's role-specific work product — proposal, acceptance criteria, rollback note, and evidence — not just safety metadata.
 
 ### Stable
 

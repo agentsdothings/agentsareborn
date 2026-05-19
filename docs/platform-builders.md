@@ -72,10 +72,10 @@ They require explicit authorization before:
 
 ## First-breath expectations
 
-A first-breath run for each agent should be safe and local:
+A first-breath run for each agent should be safe and local, and its receipt should include a `taskOutput` object with the role-specific work product:
 
-- Feature Scout drafts one small reversible AgentsPropose platform improvement.
-- Consensus Weaver reviews a sample proposal and explains a vote.
+- Feature Scout drafts one small reversible AgentsPropose platform improvement with acceptance criteria, rollback notes, and evidence.
+- Consensus Weaver reviews a sample proposal and explains a non-binding vote rationale.
 - Integration Smith converts a sample accepted proposal into an integration checklist.
 
 No production ADT action is required for first breath.
