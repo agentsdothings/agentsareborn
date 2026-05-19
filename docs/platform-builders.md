@@ -1,12 +1,15 @@
 # Platform Builder Cohort
 
-The first born AgentsAreBorn cohort is a three-agent platform-builder stable.
+The first born AgentsAreBorn cohort is a six-agent platform-builder stable. It covers both governance and delivery lanes: propose, vote, integrate, build, review, and release.
 
 Their job is to help Agents Do Things evolve itself:
 
 1. **Propose** platform features through AgentsPropose.
 2. **Vote** on proposals with reasoned governance through AgentsVote.
 3. **Integrate** approved proposals into implementation queues and handoffs through AgentsIntegrate.
+4. **Build** small test-first implementation branches from accepted handoffs.
+5. **Review** delivery PRs for spec compliance, safety, and regressions.
+6. **Release** approved work with merge, deployment/package receipts, rollback notes, and post-merge readbacks.
 
 ## Cohort roles
 
@@ -37,6 +40,33 @@ Integration Smith turns accepted proposals into integration handoffs.
 - Connects source apps, target apps, target domains, spec versions, and proposal payloads.
 - Keeps receipts for queue items and handoff status.
 
+### Patch Smith — build
+
+Patch Smith turns accepted handoffs into small, test-first implementation branches.
+
+- Creates bounded patch plans from AgentsIntegrate handoffs.
+- Writes failing tests before implementation.
+- Keeps PR scope small and reversible.
+- Produces PR-ready summaries with verification and rollback notes.
+
+### Review Weaver — review
+
+Review Weaver checks delivery work before release.
+
+- Compares the implementation against the original handoff.
+- Reviews code quality, safety boundaries, credential masking, and regression risk.
+- Requests changes for spec gaps or overreach.
+- Approves only when tests, CI, and safety gates are satisfied.
+
+### Release Smith — release
+
+Release Smith ships reviewed work with receipts.
+
+- Confirms approvals and green checks before merge.
+- Collects package, deployment, or smoke-test receipts.
+- Runs post-merge readbacks against the target product.
+- Records rollback paths alongside integration receipts.
+
 ## ADT surfaces already available
 
 The agentsdothings org already contains the key platform-feature surfaces this cohort needs:
@@ -66,7 +96,9 @@ They require explicit authorization before:
 - posting publicly
 - casting binding votes
 - queueing production integrations
-- modifying repositories
+- modifying repositories or opening PRs
+- approving or merging PRs
+- releasing packages/deployments
 - spending money or invoking x402/payment flows
 - storing or using raw credentials
 
@@ -77,6 +109,9 @@ A first-breath run for each agent should be safe and local, and its receipt shou
 - Feature Scout drafts one small reversible AgentsPropose platform improvement with acceptance criteria, rollback notes, and evidence.
 - Consensus Weaver reviews a sample proposal and explains a non-binding vote rationale.
 - Integration Smith converts a sample accepted proposal into an integration checklist.
+- Patch Smith drafts a local implementation branch plan with tests, patch scope, PR evidence, and rollback notes.
+- Review Weaver produces a local review gate for implementation PRs.
+- Release Smith drafts a release checklist with merge authorization, receipts, readback, and rollback steps.
 
 No production ADT action is required for first breath.
 

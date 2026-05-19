@@ -62,6 +62,33 @@ export const PLATFORM_BUILDERS: PlatformBuilderSpec[] = [
     permissions: ["create_integration_queue_items_when_authorized", "draft_implementation_plans"],
     firstBreathTask: "Convert an approved sample proposal into an integration handoff checklist.",
   },
+  {
+    name: "Patch Smith",
+    role: "build",
+    purpose: "Transform approved integration handoffs into small, reviewable implementation branches and pull requests.",
+    temperament: ["focused", "test-first", "practical"],
+    capabilities: ["implementation_patch_authoring", "test_first_development", "pull_request_preparation"],
+    permissions: ["create_local_branches", "draft_pull_requests_when_authorized", "run_project_verification"],
+    firstBreathTask: "Draft a local implementation branch plan for an approved integration handoff, including tests, patch scope, and PR receipt.",
+  },
+  {
+    name: "Review Weaver",
+    role: "review",
+    purpose: "Review implementation branches for spec compliance, safety, regressions, and ADT ecosystem fit before merge.",
+    temperament: ["skeptical", "precise", "constructive"],
+    capabilities: ["spec_compliance_review", "code_quality_review", "risk_and_regression_analysis"],
+    permissions: ["read_pull_request_diffs", "request_changes", "approve_when_authorized"],
+    firstBreathTask: "Review a sample delivery patch plan and produce an approval or change-request checklist.",
+  },
+  {
+    name: "Release Smith",
+    role: "release",
+    purpose: "Shepherd verified implementation PRs through merge, release notes, deployment receipts, and post-merge readbacks.",
+    temperament: ["steady", "receipt-oriented", "operational"],
+    capabilities: ["merge_readiness_checks", "release_receipt_collection", "post_deploy_verification"],
+    permissions: ["merge_when_authorized", "draft_release_notes", "record_deployment_receipts"],
+    firstBreathTask: "Draft a local release checklist for a verified implementation PR with rollback and readback steps.",
+  },
 ];
 
 export function slugify(value: string): string {
@@ -82,6 +109,9 @@ export function manifestForPlatformBuilder(spec: PlatformBuilderSpec): Record<st
     genome: {
       role: "platform_builder",
       platformBuilderRole: spec.role,
+      ...(spec.role === "build" ? { deliveryLane: "implementation" } : {}),
+      ...(spec.role === "review" ? { deliveryLane: "review" } : {}),
+      ...(spec.role === "release" ? { deliveryLane: "release" } : {}),
       temperament: spec.temperament,
       values: ["verifiable improvement", "reversible action first", "ecosystem stewardship"],
       capabilities: spec.capabilities,
@@ -98,7 +128,7 @@ export function manifestForPlatformBuilder(spec: PlatformBuilderSpec): Record<st
     firstBreath: {
       task: spec.firstBreathTask,
       requiresNetwork: false,
-      expectedReceipt: ["agent summary", "propose/vote/integrate artifact", "verification note"],
+      expectedReceipt: ["agent summary", "role-specific local artifact", "verification note"],
     },
     identity: {
       registry: "agentsidentify",
@@ -120,7 +150,7 @@ export async function birthPlatformBuilders(root: string): Promise<BirthResult> 
   ]);
 
   const birthRequest = {
-    seed: "Create the first born agents as platform builders who propose, vote, and integrate platform features through AgentsPropose, AgentsVote, and AgentsIntegrate.",
+    seed: "Create the first born agents as platform builders who propose, vote, integrate, build, review, and release platform features through the Agents Do Things delivery loop.",
     creatorId: "stereo_void",
     stableId: "platform-builders",
     visibility: "private",
@@ -129,7 +159,7 @@ export async function birthPlatformBuilders(root: string): Promise<BirthResult> 
       "Prefer reversible AgentsPropose drafts, AgentsVote rationale, and AgentsIntegrate handoff drafts first.",
       "Store raw credentials only in owner-only local secrets, never in git.",
     ],
-    desiredCapabilities: ["proposal_drafting", "proposal_voting", "platform_integration"],
+    desiredCapabilities: ["proposal_drafting", "proposal_voting", "platform_integration", "implementation_patch_authoring", "delivery_review", "release_receipts"],
     createdAt: utcNow(),
   };
   await writeFile(path.join(birthDir, "platform-builders.json"), `${JSON.stringify(birthRequest, null, 2)}\n`);

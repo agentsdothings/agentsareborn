@@ -1,0 +1,54 @@
+{
+  "agentId": "local_platform_builder_release_smith",
+  "agentName": "Release Smith",
+  "task": "Draft a local release checklist for a verified implementation PR with rollback and readback steps.",
+  "startedAt": "2026-05-19T22:53:44Z",
+  "completedAt": "2026-05-19T22:53:44Z",
+  "networkUsed": false,
+  "actionsAttempted": [
+    "load stable entry",
+    "load manifest",
+    "check first-breath network policy",
+    "execute local role task",
+    "emit verification receipt"
+  ],
+  "actionsDenied": [
+    "network access",
+    "credential resolution",
+    "production ADT mutation",
+    "public posting",
+    "payment/spend action"
+  ],
+  "filesWritten": [
+    "first_breath_receipts/local_platform_builder_release_smith.json"
+  ],
+  "artifact": {
+    "kind": "agentsintegrate.delivery.release-checklist",
+    "source": "github.pull_request",
+    "target": "adt.release_receipt",
+    "checklist": [
+      "Confirm PR approval and green checks.",
+      "Merge using the authorized strategy.",
+      "Collect deployment or package receipts.",
+      "Run post-merge readback and document rollback."
+    ]
+  },
+  "taskOutput": {
+    "role": "release",
+    "summary": "Release Smith drafted a release lane that only ships reviewed work with receipts and readbacks.",
+    "proposal": "After approval and green checks, merge with authorization, collect package/deploy receipts, run target readback, and record rollback steps alongside the integration item.",
+    "acceptanceCriteria": [
+      "Merge only occurs after explicit authorization, approvals, and green CI.",
+      "Release notes include PR, commit, verification, and rollback references.",
+      "Post-merge readback verifies the shipped behavior or records a rollback decision."
+    ],
+    "rollbackNote": "Use the documented rollback path for the merged PR or revert commit, then attach the rollback receipt to the integration item.",
+    "evidenceUsed": [
+      "stable entry local_platform_builder_release_smith",
+      "manifest manifests/platform-builders/release-smith.json",
+      "local-first safety policy"
+    ]
+  },
+  "verificationNote": "Release Smith can be read from the local stable, has a manifest, produced local task output, and passed the local-only first-breath safety boundary.",
+  "status": "completed"
+}

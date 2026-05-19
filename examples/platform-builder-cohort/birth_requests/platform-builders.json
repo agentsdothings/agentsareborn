@@ -1,5 +1,5 @@
 {
-  "seed": "Create the first born agents as platform builders who propose, vote, and integrate platform features through AgentsPropose, AgentsVote, and AgentsIntegrate.",
+  "seed": "Create the first born agents as platform builders who propose, vote, integrate, build, review, and release platform features through the Agents Do Things delivery loop.",
   "creatorId": "stereo_void",
   "stableId": "platform-builders",
   "visibility": "private",
@@ -11,7 +11,10 @@
   "desiredCapabilities": [
     "proposal_drafting",
     "proposal_voting",
-    "platform_integration"
+    "platform_integration",
+    "implementation_patch_authoring",
+    "delivery_review",
+    "release_receipts"
   ],
-  "createdAt": "2026-05-19T00:10:30Z"
+  "createdAt": "2026-05-19T22:53:44Z"
 }

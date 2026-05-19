@@ -53,7 +53,7 @@
     "requiresNetwork": false,
     "expectedReceipt": [
       "agent summary",
-      "propose/vote/integrate artifact",
+      "role-specific local artifact",
       "verification note"
     ]
   },
@@ -62,5 +62,5 @@
     "status": "pending_activation",
     "credentialRef": "local-secrets:integration-smith"
   },
-  "createdAt": "2026-05-19T00:10:30Z"
+  "createdAt": "2026-05-19T22:53:44Z"
 }

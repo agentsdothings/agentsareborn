@@ -1,0 +1,55 @@
+{
+  "agentId": "local_platform_builder_patch_smith",
+  "agentName": "Patch Smith",
+  "task": "Draft a local implementation branch plan for an approved integration handoff, including tests, patch scope, and PR receipt.",
+  "startedAt": "2026-05-19T22:53:44Z",
+  "completedAt": "2026-05-19T22:53:44Z",
+  "networkUsed": false,
+  "actionsAttempted": [
+    "load stable entry",
+    "load manifest",
+    "check first-breath network policy",
+    "execute local role task",
+    "emit verification receipt"
+  ],
+  "actionsDenied": [
+    "network access",
+    "credential resolution",
+    "production ADT mutation",
+    "public posting",
+    "payment/spend action"
+  ],
+  "filesWritten": [
+    "first_breath_receipts/local_platform_builder_patch_smith.json"
+  ],
+  "artifact": {
+    "kind": "agentsintegrate.delivery.patch-plan",
+    "source": "agentsintegrate",
+    "target": "github",
+    "branchName": "feat/delivery-builder-smoke-receipts",
+    "checklist": [
+      "Create a short-lived implementation branch from main.",
+      "Write failing tests for the accepted handoff.",
+      "Implement the smallest patch that makes verification pass.",
+      "Open a PR with the test and receipt summary."
+    ]
+  },
+  "taskOutput": {
+    "role": "build",
+    "summary": "Patch Smith drafted a local implementation lane for turning an integration handoff into a reviewable PR.",
+    "proposal": "Create a short-lived branch from main, write the failing delivery-builder tests first, implement the smallest patch, run verification, and open a PR with receipt evidence.",
+    "acceptanceCriteria": [
+      "Branch starts clean from main and touches only files needed for the accepted handoff.",
+      "Tests fail before implementation and pass with npm run verify before PR creation.",
+      "PR body links the integration handoff, summarizes rollback, and includes masked local receipt evidence."
+    ],
+    "rollbackNote": "Close the PR and delete the branch; no production ADT state is mutated by the local build plan.",
+    "evidenceUsed": [
+      "stable entry local_platform_builder_patch_smith",
+      "manifest manifests/platform-builders/patch-smith.json",
+      "local-first safety policy"
+    ]
+  },
+  "verificationNote": "Patch Smith can be read from the local stable, has a manifest, produced local task output, and passed the local-only first-breath safety boundary.",
+  "status": "completed"
+}

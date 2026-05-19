@@ -1,5 +1,5 @@
 {
-  "agentId": "local_platform_builder_integration_smith",
+  "agentId": "local_platform_builder_release_smith",
   "creatorId": "stereo_void",
   "parentAgentIds": [],
   "templateIds": [
@@ -9,10 +9,10 @@
     {
       "type": "born",
       "occurredAt": "2026-05-19T22:53:44Z",
-      "summary": "Integration Smith born locally as the integrate platform-builder role.",
+      "summary": "Release Smith born locally as the release platform-builder role.",
       "metadata": {
         "source": "agentsareborn",
-        "role": "integrate"
+        "role": "release"
       }
     }
   ]

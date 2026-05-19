@@ -66,6 +66,46 @@ function localArtifactFor(agent: StableAgent): Record<string, unknown> {
       ],
     };
   }
+  if (agent.role === "build") {
+    return {
+      kind: "agentsintegrate.delivery.patch-plan",
+      source: "agentsintegrate",
+      target: "github",
+      branchName: "feat/delivery-builder-smoke-receipts",
+      checklist: [
+        "Create a short-lived implementation branch from main.",
+        "Write failing tests for the accepted handoff.",
+        "Implement the smallest patch that makes verification pass.",
+        "Open a PR with the test and receipt summary.",
+      ],
+    };
+  }
+  if (agent.role === "review") {
+    return {
+      kind: "agentsintegrate.delivery.review",
+      source: "github.pull_request",
+      decision: "request_changes_until_verified",
+      checklist: [
+        "Compare implementation against the integration handoff.",
+        "Run local verification or inspect CI receipts.",
+        "Check credential masking and rollback notes.",
+        "Approve only when spec, tests, and safety gates pass.",
+      ],
+    };
+  }
+  if (agent.role === "release") {
+    return {
+      kind: "agentsintegrate.delivery.release-checklist",
+      source: "github.pull_request",
+      target: "adt.release_receipt",
+      checklist: [
+        "Confirm PR approval and green checks.",
+        "Merge using the authorized strategy.",
+        "Collect deployment or package receipts.",
+        "Run post-merge readback and document rollback.",
+      ],
+    };
+  }
   return {
     kind: "agentsareborn.identity-summary",
     role: agent.role,
@@ -120,6 +160,51 @@ function taskOutputFor(agent: StableAgent, manifest: Record<string, unknown>): F
         "npm run verify passes and no credentials or production APIs are used.",
       ],
       rollbackNote: "Revert the schema/interface/checklist changes and regenerate receipts without taskOutput.",
+      evidenceUsed,
+    };
+  }
+
+  if (agent.role === "build") {
+    return {
+      role: "build",
+      summary: `${agent.name} drafted a local implementation lane for turning an integration handoff into a reviewable PR.`,
+      proposal: "Create a short-lived branch from main, write the failing delivery-builder tests first, implement the smallest patch, run verification, and open a PR with receipt evidence.",
+      acceptanceCriteria: [
+        "Branch starts clean from main and touches only files needed for the accepted handoff.",
+        "Tests fail before implementation and pass with npm run verify before PR creation.",
+        "PR body links the integration handoff, summarizes rollback, and includes masked local receipt evidence.",
+      ],
+      rollbackNote: "Close the PR and delete the branch; no production ADT state is mutated by the local build plan.",
+      evidenceUsed,
+    };
+  }
+
+  if (agent.role === "review") {
+    return {
+      role: "review",
+      summary: `${agent.name} produced a local review gate for implementation PRs before release handoff.`,
+      proposal: "Require spec compliance, regression coverage, credential masking, rollback clarity, and green checks before a delivery PR can move to release.",
+      acceptanceCriteria: [
+        "Review names PASS or REQUEST_CHANGES for every integration-handoff requirement.",
+        "Quality review checks tests, safety boundaries, type contracts, and overreach.",
+        "Release handoff is blocked until critical and important issues are resolved.",
+      ],
+      rollbackNote: "Remove the review gate and return the PR to draft if review criteria prove too broad or block emergency rollback work.",
+      evidenceUsed,
+    };
+  }
+
+  if (agent.role === "release") {
+    return {
+      role: "release",
+      summary: `${agent.name} drafted a release lane that only ships reviewed work with receipts and readbacks.`,
+      proposal: "After approval and green checks, merge with authorization, collect package/deploy receipts, run target readback, and record rollback steps alongside the integration item.",
+      acceptanceCriteria: [
+        "Merge only occurs after explicit authorization, approvals, and green CI.",
+        "Release notes include PR, commit, verification, and rollback references.",
+        "Post-merge readback verifies the shipped behavior or records a rollback decision.",
+      ],
+      rollbackNote: "Use the documented rollback path for the merged PR or revert commit, then attach the rollback receipt to the integration item.",
       evidenceUsed,
     };
   }

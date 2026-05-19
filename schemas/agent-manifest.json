@@ -77,7 +77,10 @@
           "enum": [
             "propose",
             "vote",
-            "integrate"
+            "integrate",
+            "build",
+            "review",
+            "release"
           ]
         }
       },
