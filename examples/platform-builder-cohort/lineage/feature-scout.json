@@ -8,11 +8,11 @@
   "events": [
     {
       "type": "born",
-      "occurredAt": "2026-05-17T15:29:26Z",
-      "summary": "Feature Scout born locally as the suggest platform-builder role.",
+      "occurredAt": "2026-05-19T00:10:30Z",
+      "summary": "Feature Scout born locally as the propose platform-builder role.",
       "metadata": {
         "source": "agentsareborn",
-        "role": "suggest"
+        "role": "propose"
       }
     }
   ]

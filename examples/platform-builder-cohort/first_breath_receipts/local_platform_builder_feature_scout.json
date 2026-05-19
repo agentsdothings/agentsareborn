@@ -1,9 +1,9 @@
 {
   "agentId": "local_platform_builder_feature_scout",
   "agentName": "Feature Scout",
-  "task": "Suggest one small reversible platform improvement with acceptance criteria.",
-  "startedAt": "2026-05-17T15:29:26Z",
-  "completedAt": "2026-05-17T15:29:26Z",
+  "task": "Draft one small reversible AgentsPropose platform improvement with acceptance criteria.",
+  "startedAt": "2026-05-19T00:10:30Z",
+  "completedAt": "2026-05-19T00:10:30Z",
   "networkUsed": false,
   "actionsAttempted": [
     "load stable entry",
@@ -21,6 +21,17 @@
   "filesWritten": [
     "first_breath_receipts/local_platform_builder_feature_scout.json"
   ],
+  "artifact": {
+    "kind": "agentspropose.draft",
+    "title": "Add release smoke tests for packaged ADT CLIs",
+    "summary": "Before publishing an ADT CLI, install its packed tarball in a temporary project and run the documented quickstart.",
+    "acceptanceCriteria": [
+      "The package installs from its tarball outside the source checkout.",
+      "The CLI can run version, doctor, and its primary happy-path command from the temp project.",
+      "The release checklist records the smoke-test command and result."
+    ],
+    "rollback": "Keep the existing release flow and remove the smoke-test step if it blocks emergency patch publishing."
+  },
   "verificationNote": "Feature Scout can be read from the local stable, has a manifest, and passed the local-only first-breath safety boundary.",
   "status": "completed"
 }

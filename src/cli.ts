@@ -87,6 +87,10 @@ async function packageVersion(): Promise<string> {
   return packageJson.version;
 }
 
+function packageRoot(): string {
+  return fileURLToPath(new URL("../..", import.meta.url));
+}
+
 async function schemaList(): Promise<Record<string, string>> {
   return {
     birthRequest: "schemas/agent-birth-request.json",
@@ -113,13 +117,13 @@ export async function main(argv = process.argv.slice(2)): Promise<number> {
       return 0;
     }
     if (args.command === "validate") {
-      const result = await validateJsonArtifacts(process.cwd());
+      const result = await validateJsonArtifacts(packageRoot());
       console.log(JSON.stringify(result, null, 2));
       return result.ok ? 0 : 1;
     }
     if (args.command === "doctor") {
       const store = new StableStore(path.join(args.root, "stable"));
-      console.log(JSON.stringify({ root: args.root, schemas: await schemaList(), agents: await store.listAgents(), validation: await validateJsonArtifacts(process.cwd()) }, null, 2));
+      console.log(JSON.stringify({ root: args.root, schemas: await schemaList(), agents: await store.listAgents(), validation: await validateJsonArtifacts(packageRoot()) }, null, 2));
       return 0;
     }
     if (args.command === "birth-platform-builders") {

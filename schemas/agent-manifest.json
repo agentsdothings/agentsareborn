@@ -75,7 +75,7 @@
         "platformBuilderRole": {
           "type": "string",
           "enum": [
-            "suggest",
+            "propose",
             "vote",
             "integrate"
           ]

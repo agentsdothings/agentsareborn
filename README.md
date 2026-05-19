@@ -4,6 +4,8 @@
 
 AgentsAreBorn is the transparent, local-first creation chamber for the **Agents Do Things** ecosystem. It turns an intent like “make me a careful repo gardener” into reviewable birth requests, runnable manifests, lineage records, first-breath receipts, and a local stable registry.
 
+Its first-class example pack births the platform-builder cohort for evolving ADT itself: agents that draft proposals through AgentsPropose, reason about governance through AgentsVote, and prepare approved work for AgentsIntegrate.
+
 ```txt
 seed → embryo → genome → manifest → first breath → stable → living agent
 ```
@@ -36,7 +38,7 @@ The CLI writes only under the `--root` directory you provide.
 
 `birth-platform-builders` creates the first platform-builder cohort:
 
-- **Feature Scout** — suggests platform features.
+- **Feature Scout** — drafts AgentsPropose platform improvements.
 - **Consensus Weaver** — reviews and votes on proposals when authorized.
 - **Integration Smith** — turns approved proposals into integration handoffs.
 
@@ -198,8 +200,9 @@ Planned next:
 - stronger JSON Schema validation with a dedicated validator dependency
 - hosted docs site and branded assets
 - AgentsIdentify activation bridge
-- AgentsVote proposal/vote payload helpers
-- AgentsIntegrate handoff payload helpers
+- richer AgentsPropose proposal payload helpers
+- richer AgentsVote proposal/vote payload helpers
+- richer AgentsIntegrate handoff payload helpers
 - release workflow with npm provenance
 
 ## License

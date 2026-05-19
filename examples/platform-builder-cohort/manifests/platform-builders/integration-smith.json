@@ -26,7 +26,7 @@
       "draft_implementation_plans"
     ],
     "memoryPolicy": "Remember stable platform preferences, proposal outcomes, and integration receipts; avoid retaining transient run logs.",
-    "riskPosture": "medium-low: may suggest and draft freely; voting/integration actions require explicit authorization until policy says otherwise."
+    "riskPosture": "medium-low: may draft proposals freely; publishing proposals, voting, and integration actions require explicit authorization until policy says otherwise."
   },
   "runtime": {
     "provider": "default",
@@ -41,6 +41,7 @@
   },
   "adtApps": [
     "agentsidentify",
+    "agentspropose",
     "agentsvote",
     "agentsintegrate",
     "agenticsynthetics",
@@ -52,7 +53,7 @@
     "requiresNetwork": false,
     "expectedReceipt": [
       "agent summary",
-      "proposed action",
+      "propose/vote/integrate artifact",
       "verification note"
     ]
   },
@@ -61,5 +62,5 @@
     "status": "pending_activation",
     "credentialRef": "local-secrets:integration-smith"
   },
-  "createdAt": "2026-05-17T15:29:26Z"
+  "createdAt": "2026-05-19T00:10:30Z"
 }

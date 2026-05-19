@@ -5,6 +5,7 @@ import { StableStore, type PlatformBuilderRole, utcNow } from "./stable.js";
 
 export const ADT_PLATFORM_APPS = [
   "agentsidentify",
+  "agentspropose",
   "agentsvote",
   "agentsintegrate",
   "agenticsynthetics",
@@ -36,12 +37,12 @@ export interface BirthResult {
 export const PLATFORM_BUILDERS: PlatformBuilderSpec[] = [
   {
     name: "Feature Scout",
-    role: "suggest",
-    purpose: "Discover, frame, and propose useful platform features across Agents Do Things.",
+    role: "propose",
+    purpose: "Discover, frame, and propose useful platform features across Agents Do Things through AgentsPropose.",
     temperament: ["curious", "specific", "constructive"],
-    capabilities: ["platform_feature_suggestion", "repo_reconnaissance", "proposal_drafting"],
-    permissions: ["read_public_and_authorized_repos", "draft_private_feature_proposals"],
-    firstBreathTask: "Suggest one small reversible platform improvement with acceptance criteria.",
+    capabilities: ["agentspropose_drafting", "repo_reconnaissance", "proposal_acceptance_criteria"],
+    permissions: ["read_public_and_authorized_repos", "draft_private_agentspropose_items"],
+    firstBreathTask: "Draft one small reversible AgentsPropose platform improvement with acceptance criteria.",
   },
   {
     name: "Consensus Weaver",
@@ -86,7 +87,7 @@ export function manifestForPlatformBuilder(spec: PlatformBuilderSpec): Record<st
       capabilities: spec.capabilities,
       permissions: spec.permissions,
       memoryPolicy: "Remember stable platform preferences, proposal outcomes, and integration receipts; avoid retaining transient run logs.",
-      riskPosture: "medium-low: may suggest and draft freely; voting/integration actions require explicit authorization until policy says otherwise.",
+      riskPosture: "medium-low: may draft proposals freely; publishing proposals, voting, and integration actions require explicit authorization until policy says otherwise.",
     },
     runtime: {
       provider: "default",
@@ -97,7 +98,7 @@ export function manifestForPlatformBuilder(spec: PlatformBuilderSpec): Record<st
     firstBreath: {
       task: spec.firstBreathTask,
       requiresNetwork: false,
-      expectedReceipt: ["agent summary", "proposed action", "verification note"],
+      expectedReceipt: ["agent summary", "propose/vote/integrate artifact", "verification note"],
     },
     identity: {
       registry: "agentsidentify",
@@ -119,16 +120,16 @@ export async function birthPlatformBuilders(root: string): Promise<BirthResult> 
   ]);
 
   const birthRequest = {
-    seed: "Create the first born agents as platform builders who suggest, vote, and integrate platform features.",
+    seed: "Create the first born agents as platform builders who propose, vote, and integrate platform features through AgentsPropose, AgentsVote, and AgentsIntegrate.",
     creatorId: "stereo_void",
     stableId: "platform-builders",
     visibility: "private",
     constraints: [
       "Do not spend money or call irreversible production actions without explicit authorization.",
-      "Prefer reversible proposal, vote, and integration-draft actions first.",
+      "Prefer reversible AgentsPropose drafts, AgentsVote rationale, and AgentsIntegrate handoff drafts first.",
       "Store raw credentials only in owner-only local secrets, never in git.",
     ],
-    desiredCapabilities: ["feature_suggestion", "proposal_voting", "platform_integration"],
+    desiredCapabilities: ["proposal_drafting", "proposal_voting", "platform_integration"],
     createdAt: utcNow(),
   };
   await writeFile(path.join(birthDir, "platform-builders.json"), `${JSON.stringify(birthRequest, null, 2)}\n`);

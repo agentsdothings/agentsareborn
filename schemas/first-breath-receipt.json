@@ -55,6 +55,10 @@
         "type": "string"
       }
     },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": true
+    },
     "verificationNote": {
       "type": "string"
     },

@@ -13,8 +13,54 @@ export interface FirstBreathReceipt {
   actionsAttempted: string[];
   actionsDenied: string[];
   filesWritten: string[];
+  artifact: Record<string, unknown>;
   verificationNote: string;
   status: "dry_run" | "completed";
+}
+
+function localArtifactFor(agent: StableAgent): Record<string, unknown> {
+  if (agent.role === "propose") {
+    return {
+      kind: "agentspropose.draft",
+      title: "Add release smoke tests for packaged ADT CLIs",
+      summary: "Before publishing an ADT CLI, install its packed tarball in a temporary project and run the documented quickstart.",
+      acceptanceCriteria: [
+        "The package installs from its tarball outside the source checkout.",
+        "The CLI can run version, doctor, and its primary happy-path command from the temp project.",
+        "The release checklist records the smoke-test command and result.",
+      ],
+      rollback: "Keep the existing release flow and remove the smoke-test step if it blocks emergency patch publishing.",
+    };
+  }
+  if (agent.role === "vote") {
+    return {
+      kind: "agentsvote.rationale",
+      proposalTitle: "Add release smoke tests for packaged ADT CLIs",
+      vote: "yes",
+      rationale: "The change is reversible, low-risk, and catches package-path bugs that local repo tests miss.",
+      concerns: ["Keep the smoke test small enough that publishing remains fast."],
+    };
+  }
+  if (agent.role === "integrate") {
+    return {
+      kind: "agentsintegrate.handoff",
+      source: "agentspropose",
+      decisionSource: "agentsvote",
+      target: "agentsintegrate",
+      queueTitle: "Wire packaged CLI smoke tests into ADT release workflows",
+      checklist: [
+        "Create a temp project during release verification.",
+        "Install the packed tarball.",
+        "Run the package's documented quickstart commands.",
+        "Attach the smoke-test receipt to the integration item.",
+      ],
+    };
+  }
+  return {
+    kind: "agentsareborn.identity-summary",
+    role: agent.role,
+    name: agent.name,
+  };
 }
 
 async function manifestFor(root: string, agent: StableAgent): Promise<Record<string, unknown>> {
@@ -52,6 +98,7 @@ export async function firstBreath(root: string, agentId: string, options: { dryR
     actionsAttempted: ["load stable entry", "load manifest", "check first-breath network policy", "emit verification receipt"],
     actionsDenied: ["network access", "credential resolution", "production ADT mutation", "public posting", "payment/spend action"],
     filesWritten: [],
+    artifact: localArtifactFor(agent),
     verificationNote: `${agent.name} can be read from the local stable, has a manifest, and passed the local-only first-breath safety boundary.`,
     status: options.dryRun ? "dry_run" : "completed",
   };

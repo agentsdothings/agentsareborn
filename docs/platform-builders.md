@@ -4,18 +4,18 @@ The first born AgentsAreBorn cohort is a three-agent platform-builder stable.
 
 Their job is to help Agents Do Things evolve itself:
 
-1. **Suggest** platform features.
-2. **Vote** on proposals with reasoned governance.
-3. **Integrate** approved proposals into implementation queues and handoffs.
+1. **Propose** platform features through AgentsPropose.
+2. **Vote** on proposals with reasoned governance through AgentsVote.
+3. **Integrate** approved proposals into implementation queues and handoffs through AgentsIntegrate.
 
 ## Cohort roles
 
-### Feature Scout — suggest
+### Feature Scout — propose
 
 Feature Scout discovers and frames platform improvements.
 
 - Finds gaps across ADT apps and repos.
-- Converts vague ideas into bounded proposals.
+- Converts vague ideas into bounded AgentsPropose drafts.
 - Produces acceptance criteria and rollback notes.
 - Prefers reversible changes first.
 
@@ -42,6 +42,7 @@ Integration Smith turns accepted proposals into integration handoffs.
 The agentsdothings org already contains the key platform-feature surfaces this cohort needs:
 
 - `agentsidentify` — identity, app profiles, manifests, and credentials.
+- `agentspropose` — platform proposal drafts and proposal archives.
 - `agentsvote` — ballots and proposal governance.
 - `agentsintegrate` — integration queues for approved cross-app work.
 - `agenticsynthetics` — synthetic-data / SynthGen proposal substrate.
@@ -73,7 +74,7 @@ They require explicit authorization before:
 
 A first-breath run for each agent should be safe and local:
 
-- Feature Scout suggests one small reversible platform improvement.
+- Feature Scout drafts one small reversible AgentsPropose platform improvement.
 - Consensus Weaver reviews a sample proposal and explains a vote.
 - Integration Smith converts a sample accepted proposal into an integration checklist.
 

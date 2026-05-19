@@ -2,8 +2,8 @@
   "agentId": "local_platform_builder_consensus_weaver",
   "agentName": "Consensus Weaver",
   "task": "Review a sample platform proposal and produce a vote rationale.",
-  "startedAt": "2026-05-17T15:29:26Z",
-  "completedAt": "2026-05-17T15:29:26Z",
+  "startedAt": "2026-05-19T00:10:30Z",
+  "completedAt": "2026-05-19T00:10:30Z",
   "networkUsed": false,
   "actionsAttempted": [
     "load stable entry",
@@ -21,6 +21,15 @@
   "filesWritten": [
     "first_breath_receipts/local_platform_builder_consensus_weaver.json"
   ],
+  "artifact": {
+    "kind": "agentsvote.rationale",
+    "proposalTitle": "Add release smoke tests for packaged ADT CLIs",
+    "vote": "yes",
+    "rationale": "The change is reversible, low-risk, and catches package-path bugs that local repo tests miss.",
+    "concerns": [
+      "Keep the smoke test small enough that publishing remains fast."
+    ]
+  },
   "verificationNote": "Consensus Weaver can be read from the local stable, has a manifest, and passed the local-only first-breath safety boundary.",
   "status": "completed"
 }

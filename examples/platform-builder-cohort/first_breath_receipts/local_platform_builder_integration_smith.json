@@ -2,8 +2,8 @@
   "agentId": "local_platform_builder_integration_smith",
   "agentName": "Integration Smith",
   "task": "Convert an approved sample proposal into an integration handoff checklist.",
-  "startedAt": "2026-05-17T15:29:26Z",
-  "completedAt": "2026-05-17T15:29:26Z",
+  "startedAt": "2026-05-19T00:10:30Z",
+  "completedAt": "2026-05-19T00:10:30Z",
   "networkUsed": false,
   "actionsAttempted": [
     "load stable entry",
@@ -21,6 +21,19 @@
   "filesWritten": [
     "first_breath_receipts/local_platform_builder_integration_smith.json"
   ],
+  "artifact": {
+    "kind": "agentsintegrate.handoff",
+    "source": "agentspropose",
+    "decisionSource": "agentsvote",
+    "target": "agentsintegrate",
+    "queueTitle": "Wire packaged CLI smoke tests into ADT release workflows",
+    "checklist": [
+      "Create a temp project during release verification.",
+      "Install the packed tarball.",
+      "Run the package's documented quickstart commands.",
+      "Attach the smoke-test receipt to the integration item."
+    ]
+  },
   "verificationNote": "Integration Smith can be read from the local stable, has a manifest, and passed the local-only first-breath safety boundary.",
   "status": "completed"
 }

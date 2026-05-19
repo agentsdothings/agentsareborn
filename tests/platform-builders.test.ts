@@ -15,13 +15,13 @@ test("slugify creates stable ids", () => {
   assert.equal(slugify("  Consensus  Weaver!! "), "consensus-weaver");
 });
 
-test("birthPlatformBuilders creates the suggest/vote/integrate role cohort", async () => {
+test("birthPlatformBuilders creates the propose/vote/integrate role cohort", async () => {
   const root = await mkdtemp(path.join(tmpdir(), "agentsareborn-"));
   try {
     const result = await birthPlatformBuilders(root);
 
     assert.equal(result.stableId, "platform-builders");
-    assert.deepEqual(result.agents.map((agent) => agent.role), ["suggest", "vote", "integrate"]);
+    assert.deepEqual(result.agents.map((agent) => agent.role), ["propose", "vote", "integrate"]);
     assert.deepEqual(new Set(result.agents.map((agent) => agent.name)), new Set([
       "Feature Scout",
       "Consensus Weaver",
@@ -34,7 +34,8 @@ test("birthPlatformBuilders creates the suggest/vote/integrate role cohort", asy
 
     for (const agent of stable.agents) {
       const manifest = JSON.parse(await readFile(path.join(root, agent.manifestPath), "utf8"));
-      assert.match(manifest.genome.platformBuilderRole, /^(suggest|vote|integrate)$/);
+      assert.match(manifest.genome.platformBuilderRole, /^(propose|vote|integrate)$/);
+      assert.ok(manifest.adtApps.includes("agentspropose"));
       assert.ok(manifest.adtApps.includes("agentsvote"));
       assert.ok(manifest.adtApps.includes("agentsintegrate"));
     }
@@ -50,11 +51,11 @@ test("StableStore adds an agent and lists it without raw credentials", async () 
     await store.addAgent({
       agentId: "agent_example",
       name: "Example Builder",
-      role: "suggest",
+      role: "propose",
       manifestPath: "manifests/example-builder.json",
       credentialRef: "local-secrets:example-builder",
-      capabilities: ["feature_suggestion"],
-      adtApps: ["agentsvote"],
+      capabilities: ["proposal_drafting"],
+      adtApps: ["agentspropose", "agentsvote"],
     });
 
     const agents = await store.listAgents();
@@ -74,6 +75,7 @@ test("firstBreath emits a local-only receipt and denies privileged actions", asy
     const receipt = await firstBreath(root, "local_platform_builder_feature_scout", { dryRun: true });
     assert.equal(receipt.networkUsed, false);
     assert.equal(receipt.status, "dry_run");
+    assert.equal(receipt.artifact.kind, "agentspropose.draft");
     assert.ok(receipt.actionsDenied.includes("credential resolution"));
     assert.equal(receipt.filesWritten.length, 0);
   } finally {

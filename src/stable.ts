@@ -1,7 +1,7 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
-export type PlatformBuilderRole = "suggest" | "vote" | "integrate";
+export type PlatformBuilderRole = "propose" | "vote" | "integrate";
 
 export interface StableAgent {
   agentId: string;
