@@ -29,8 +29,8 @@
         "cron",
         "webhook"
       ],
-      "createdAt": "2026-05-19T00:10:30Z",
-      "lastRunAt": null
+      "createdAt": "2026-05-19T22:53:44Z",
+      "lastRunAt": "2026-05-19T22:53:44Z"
     },
     {
       "agentId": "local_platform_builder_feature_scout",
@@ -59,8 +59,8 @@
         "cron",
         "webhook"
       ],
-      "createdAt": "2026-05-19T00:10:30Z",
-      "lastRunAt": null
+      "createdAt": "2026-05-19T22:53:44Z",
+      "lastRunAt": "2026-05-19T22:53:44Z"
     },
     {
       "agentId": "local_platform_builder_integration_smith",
@@ -89,9 +89,99 @@
         "cron",
         "webhook"
       ],
-      "createdAt": "2026-05-19T00:10:30Z",
-      "lastRunAt": null
+      "createdAt": "2026-05-19T22:53:44Z",
+      "lastRunAt": "2026-05-19T22:53:44Z"
+    },
+    {
+      "agentId": "local_platform_builder_patch_smith",
+      "name": "Patch Smith",
+      "role": "build",
+      "status": "embryo",
+      "origin": "agentsareborn",
+      "manifestPath": "manifests/platform-builders/patch-smith.json",
+      "credentialRef": "local-secrets:patch-smith",
+      "capabilities": [
+        "implementation_patch_authoring",
+        "test_first_development",
+        "pull_request_preparation"
+      ],
+      "adtApps": [
+        "agentsidentify",
+        "agentspropose",
+        "agentsvote",
+        "agentsintegrate",
+        "agenticsynthetics",
+        "agentsquestion",
+        "agentsgossip"
+      ],
+      "allowedRunners": [
+        "hermes",
+        "cron",
+        "webhook"
+      ],
+      "createdAt": "2026-05-19T22:53:44Z",
+      "lastRunAt": "2026-05-19T22:53:44Z"
+    },
+    {
+      "agentId": "local_platform_builder_release_smith",
+      "name": "Release Smith",
+      "role": "release",
+      "status": "embryo",
+      "origin": "agentsareborn",
+      "manifestPath": "manifests/platform-builders/release-smith.json",
+      "credentialRef": "local-secrets:release-smith",
+      "capabilities": [
+        "merge_readiness_checks",
+        "release_receipt_collection",
+        "post_deploy_verification"
+      ],
+      "adtApps": [
+        "agentsidentify",
+        "agentspropose",
+        "agentsvote",
+        "agentsintegrate",
+        "agenticsynthetics",
+        "agentsquestion",
+        "agentsgossip"
+      ],
+      "allowedRunners": [
+        "hermes",
+        "cron",
+        "webhook"
+      ],
+      "createdAt": "2026-05-19T22:53:44Z",
+      "lastRunAt": "2026-05-19T22:53:44Z"
+    },
+    {
+      "agentId": "local_platform_builder_review_weaver",
+      "name": "Review Weaver",
+      "role": "review",
+      "status": "embryo",
+      "origin": "agentsareborn",
+      "manifestPath": "manifests/platform-builders/review-weaver.json",
+      "credentialRef": "local-secrets:review-weaver",
+      "capabilities": [
+        "spec_compliance_review",
+        "code_quality_review",
+        "risk_and_regression_analysis"
+      ],
+      "adtApps": [
+        "agentsidentify",
+        "agentspropose",
+        "agentsvote",
+        "agentsintegrate",
+        "agenticsynthetics",
+        "agentsquestion",
+        "agentsgossip"
+      ],
+      "allowedRunners": [
+        "hermes",
+        "cron",
+        "webhook"
+      ],
+      "createdAt": "2026-05-19T22:53:44Z",
+      "lastRunAt": "2026-05-19T22:53:44Z"
     }
   ],
-  "updatedAt": "2026-05-19T00:10:30Z"
+  "updatedAt": "2026-05-19T22:53:44Z"
 }

@@ -2,13 +2,14 @@
   "agentId": "local_platform_builder_integration_smith",
   "agentName": "Integration Smith",
   "task": "Convert an approved sample proposal into an integration handoff checklist.",
-  "startedAt": "2026-05-19T00:10:30Z",
-  "completedAt": "2026-05-19T00:10:30Z",
+  "startedAt": "2026-05-19T22:53:44Z",
+  "completedAt": "2026-05-19T22:53:44Z",
   "networkUsed": false,
   "actionsAttempted": [
     "load stable entry",
     "load manifest",
     "check first-breath network policy",
+    "execute local role task",
     "emit verification receipt"
   ],
   "actionsDenied": [
@@ -34,6 +35,22 @@
       "Attach the smoke-test receipt to the integration item."
     ]
   },
-  "verificationNote": "Integration Smith can be read from the local stable, has a manifest, and passed the local-only first-breath safety boundary.",
+  "taskOutput": {
+    "role": "integrate",
+    "summary": "Integration Smith converted the accepted sample improvement into a local implementation handoff.",
+    "proposal": "Create a small implementation checklist for adding optional taskOutput to first-breath receipts, schema validation, tests, docs, and receipt examples.",
+    "acceptanceCriteria": [
+      "Schema accepts optional taskOutput while preserving legacy receipts.",
+      "firstBreath emits role-specific local task output and updates lastRunAt only on non-dry-run execution.",
+      "npm run verify passes and no credentials or production APIs are used."
+    ],
+    "rollbackNote": "Revert the schema/interface/checklist changes and regenerate receipts without taskOutput.",
+    "evidenceUsed": [
+      "stable entry local_platform_builder_integration_smith",
+      "manifest manifests/platform-builders/integration-smith.json",
+      "local-first safety policy"
+    ]
+  },
+  "verificationNote": "Integration Smith can be read from the local stable, has a manifest, produced local task output, and passed the local-only first-breath safety boundary.",
   "status": "completed"
 }

@@ -2,13 +2,14 @@
   "agentId": "local_platform_builder_consensus_weaver",
   "agentName": "Consensus Weaver",
   "task": "Review a sample platform proposal and produce a vote rationale.",
-  "startedAt": "2026-05-19T00:10:30Z",
-  "completedAt": "2026-05-19T00:10:30Z",
+  "startedAt": "2026-05-19T22:53:44Z",
+  "completedAt": "2026-05-19T22:53:44Z",
   "networkUsed": false,
   "actionsAttempted": [
     "load stable entry",
     "load manifest",
     "check first-breath network policy",
+    "execute local role task",
     "emit verification receipt"
   ],
   "actionsDenied": [
@@ -30,6 +31,22 @@
       "Keep the smoke test small enough that publishing remains fast."
     ]
   },
-  "verificationNote": "Consensus Weaver can be read from the local stable, has a manifest, and passed the local-only first-breath safety boundary.",
+  "taskOutput": {
+    "role": "vote",
+    "summary": "Consensus Weaver reviewed the sample first-breath receipt improvement as a non-binding local vote.",
+    "proposal": "Vote YES on capturing optional taskOutput in first-breath receipts because it makes local runs reviewable without touching production systems.",
+    "acceptanceCriteria": [
+      "Vote rationale names usefulness, reversibility, implementation risk, and ecosystem fit.",
+      "The vote remains non-binding unless explicitly authorized by stable policy.",
+      "The receipt records no network usage, credentials, or production ADT mutation."
+    ],
+    "rollbackNote": "Revert the optional taskOutput receipt field and keep legacy safety-only receipts; no production migration is required.",
+    "evidenceUsed": [
+      "stable entry local_platform_builder_consensus_weaver",
+      "manifest manifests/platform-builders/consensus-weaver.json",
+      "local-first safety policy"
+    ]
+  },
+  "verificationNote": "Consensus Weaver can be read from the local stable, has a manifest, produced local task output, and passed the local-only first-breath safety boundary.",
   "status": "completed"
 }

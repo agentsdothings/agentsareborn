@@ -18,30 +18,40 @@ test("slugify creates stable ids", () => {
   assert.equal(slugify("  Consensus  Weaver!! "), "consensus-weaver");
 });
 
-test("birthPlatformBuilders creates the propose/vote/integrate role cohort", async () => {
+test("birthPlatformBuilders creates governance and delivery-builder roles", async () => {
   const root = await mkdtemp(path.join(tmpdir(), "agentsareborn-"));
   try {
     const result = await birthPlatformBuilders(root);
 
     assert.equal(result.stableId, "platform-builders");
-    assert.deepEqual(result.agents.map((agent) => agent.role), ["propose", "vote", "integrate"]);
+    assert.deepEqual(result.agents.map((agent) => agent.role), ["propose", "vote", "integrate", "build", "review", "release"]);
     assert.deepEqual(new Set(result.agents.map((agent) => agent.name)), new Set([
       "Feature Scout",
       "Consensus Weaver",
       "Integration Smith",
+      "Patch Smith",
+      "Review Weaver",
+      "Release Smith",
     ]));
 
     const stable = JSON.parse(await readFile(path.join(root, "stable", "agents.json"), "utf8"));
     assert.equal(stable.stableId, "platform-builders");
-    assert.equal(stable.agents.length, 3);
+    assert.equal(stable.agents.length, 6);
 
     for (const agent of stable.agents) {
       const manifest = JSON.parse(await readFile(path.join(root, agent.manifestPath), "utf8"));
-      assert.match(manifest.genome.platformBuilderRole, /^(propose|vote|integrate)$/);
+      assert.match(manifest.genome.platformBuilderRole, /^(propose|vote|integrate|build|review|release)$/);
       assert.ok(manifest.adtApps.includes("agentspropose"));
       assert.ok(manifest.adtApps.includes("agentsvote"));
       assert.ok(manifest.adtApps.includes("agentsintegrate"));
     }
+
+    const patchSmith = stable.agents.find((agent: { agentId: string }) => agent.agentId === "local_platform_builder_patch_smith");
+    assert.ok(patchSmith);
+    assert.ok(patchSmith.capabilities.includes("implementation_patch_authoring"));
+    const patchManifest = JSON.parse(await readFile(path.join(root, patchSmith.manifestPath), "utf8"));
+    assert.equal(patchManifest.genome.deliveryLane, "implementation");
+    assert.ok(patchManifest.runtime.tools.includes("github"));
   } finally {
     await rm(root, { recursive: true, force: true });
   }
@@ -86,6 +96,37 @@ test("firstBreath emits a local-only receipt with role-specific task output", as
     assert.ok(receipt.taskOutput.acceptanceCriteria.length >= 3);
     assert.match(receipt.taskOutput.rollbackNote, /revert/i);
     assert.ok(receipt.taskOutput.evidenceUsed.some((evidence) => evidence.includes("manifest")));
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("firstBreath emits delivery-builder implementation output", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "agentsareborn-delivery-first-breath-"));
+  try {
+    await birthPlatformBuilders(root);
+    const patchReceipt = await firstBreath(root, "local_platform_builder_patch_smith", { dryRun: true });
+    assert.equal(patchReceipt.networkUsed, false);
+    assert.equal(patchReceipt.status, "dry_run");
+    assert.equal(patchReceipt.artifact.kind, "agentsintegrate.delivery.patch-plan");
+    assert.equal(patchReceipt.taskOutput.role, "build");
+    assert.match(patchReceipt.taskOutput.proposal, /branch/i);
+    assert.ok(patchReceipt.taskOutput.acceptanceCriteria.some((criterion) => criterion.includes("PR")));
+    assert.match(patchReceipt.taskOutput.rollbackNote, /close/i);
+
+    const reviewReceipt = await firstBreath(root, "local_platform_builder_review_weaver", { dryRun: true });
+    assert.equal(reviewReceipt.networkUsed, false);
+    assert.equal(reviewReceipt.artifact.kind, "agentsintegrate.delivery.review");
+    assert.equal(reviewReceipt.taskOutput.role, "review");
+    assert.match(reviewReceipt.taskOutput.proposal, /spec compliance/i);
+    assert.ok(reviewReceipt.taskOutput.acceptanceCriteria.some((criterion) => criterion.includes("REQUEST_CHANGES")));
+
+    const releaseReceipt = await firstBreath(root, "local_platform_builder_release_smith", { dryRun: true });
+    assert.equal(releaseReceipt.networkUsed, false);
+    assert.equal(releaseReceipt.artifact.kind, "agentsintegrate.delivery.release-checklist");
+    assert.equal(releaseReceipt.taskOutput.role, "release");
+    assert.match(releaseReceipt.taskOutput.proposal, /merge/i);
+    assert.match(releaseReceipt.taskOutput.rollbackNote, /rollback receipt/i);
   } finally {
     await rm(root, { recursive: true, force: true });
   }

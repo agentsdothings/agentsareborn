@@ -1,0 +1,54 @@
+{
+  "agentId": "local_platform_builder_review_weaver",
+  "agentName": "Review Weaver",
+  "task": "Review a sample delivery patch plan and produce an approval or change-request checklist.",
+  "startedAt": "2026-05-19T22:53:44Z",
+  "completedAt": "2026-05-19T22:53:44Z",
+  "networkUsed": false,
+  "actionsAttempted": [
+    "load stable entry",
+    "load manifest",
+    "check first-breath network policy",
+    "execute local role task",
+    "emit verification receipt"
+  ],
+  "actionsDenied": [
+    "network access",
+    "credential resolution",
+    "production ADT mutation",
+    "public posting",
+    "payment/spend action"
+  ],
+  "filesWritten": [
+    "first_breath_receipts/local_platform_builder_review_weaver.json"
+  ],
+  "artifact": {
+    "kind": "agentsintegrate.delivery.review",
+    "source": "github.pull_request",
+    "decision": "request_changes_until_verified",
+    "checklist": [
+      "Compare implementation against the integration handoff.",
+      "Run local verification or inspect CI receipts.",
+      "Check credential masking and rollback notes.",
+      "Approve only when spec, tests, and safety gates pass."
+    ]
+  },
+  "taskOutput": {
+    "role": "review",
+    "summary": "Review Weaver produced a local review gate for implementation PRs before release handoff.",
+    "proposal": "Require spec compliance, regression coverage, credential masking, rollback clarity, and green checks before a delivery PR can move to release.",
+    "acceptanceCriteria": [
+      "Review names PASS or REQUEST_CHANGES for every integration-handoff requirement.",
+      "Quality review checks tests, safety boundaries, type contracts, and overreach.",
+      "Release handoff is blocked until critical and important issues are resolved."
+    ],
+    "rollbackNote": "Remove the review gate and return the PR to draft if review criteria prove too broad or block emergency rollback work.",
+    "evidenceUsed": [
+      "stable entry local_platform_builder_review_weaver",
+      "manifest manifests/platform-builders/review-weaver.json",
+      "local-first safety policy"
+    ]
+  },
+  "verificationNote": "Review Weaver can be read from the local stable, has a manifest, produced local task output, and passed the local-only first-breath safety boundary.",
+  "status": "completed"
+}

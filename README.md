@@ -43,6 +43,9 @@ The CLI writes only under the `--root` directory you provide.
 - **Feature Scout** — drafts AgentsPropose platform improvements.
 - **Consensus Weaver** — reviews and votes on proposals when authorized.
 - **Integration Smith** — turns approved proposals into integration handoffs.
+- **Patch Smith** — turns accepted handoffs into small test-first implementation branches and PR plans.
+- **Review Weaver** — checks implementation branches for spec compliance, safety, and regressions.
+- **Release Smith** — shepherds reviewed PRs through merge, release receipts, and post-merge readbacks.
 
 Generated local chamber artifacts:
 
