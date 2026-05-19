@@ -1,10 +1,11 @@
 import assert from "node:assert/strict";
-import { mkdtemp, readFile, rm, symlink } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, symlink, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { spawnSync } from "node:child_process";
 import path from "node:path";
 import test from "node:test";
 
+import { buildAdtAuthContext, safeAdtAuthContext } from "../src/auth-bridge.js";
 import { birthPlatformBuilders, slugify } from "../src/birth.js";
 import { main } from "../src/cli.js";
 import { firstBreath } from "../src/first-breath.js";
@@ -104,6 +105,78 @@ test("firstBreath records non-dry-run receipts and updates stable lastRunAt", as
     const agent = agents.find((candidate) => candidate.agentId === "local_platform_builder_consensus_weaver");
     assert.equal(agent?.lastRunAt, receipt.completedAt);
   } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("auth bridge resolves one AgentsIdentify bearer credential for ADT app calls without app-specific secrets", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "agentsareborn-auth-bridge-"));
+  try {
+    await birthPlatformBuilders(root);
+    const secretsPath = path.join(root, "secrets", "agentsidentify-activations.json");
+    await mkdir(path.dirname(secretsPath), { recursive: true });
+    await writeFile(secretsPath, `${JSON.stringify({
+      agents: {
+        local_platform_builder_feature_scout: {
+          localAgentId: "local_platform_builder_feature_scout",
+          credentialRef: "local-secrets:feature-scout",
+          publicAgentId: "public-feature-scout",
+          manifestId: "manifest-feature-scout",
+          apiKey: "ai_test_feature_scout_secret",
+          apiKeyMasked: "ai_test...cret",
+        },
+      },
+    }, null, 2)}\n`);
+
+    const context = await buildAdtAuthContext(root, "local_platform_builder_feature_scout", "agentspropose", { secretsPath });
+    assert.equal(context.agentId, "local_platform_builder_feature_scout");
+    assert.equal(context.appSlug, "agentspropose");
+    assert.equal(context.auth.scheme, "Bearer");
+    assert.equal(context.headers.Authorization, "Bearer ai_test_feature_scout_secret");
+    assert.equal(context.credentialRef, "local-secrets:feature-scout");
+    assert.equal(context.publicAgentId, "public-feature-scout");
+
+    const safe = safeAdtAuthContext(context);
+    assert.equal(safe.authorizationHeader, "Bearer ai_test...cret");
+    assert.equal(JSON.stringify(safe).includes("ai_test_feature_scout_secret"), false);
+
+    await assert.rejects(
+      () => buildAdtAuthContext(root, "local_platform_builder_feature_scout", "agentsdate", { secretsPath }),
+      /not allowed for local_platform_builder_feature_scout/,
+    );
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("CLI auth-context prints only the safe bearer context", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "agentsareborn-auth-cli-"));
+  const originalLog = console.log;
+  const output: string[] = [];
+  console.log = (message?: unknown) => { output.push(String(message ?? "")); };
+  try {
+    await birthPlatformBuilders(root);
+    const secretsPath = path.join(root, "secrets", "agentsidentify-activations.json");
+    await mkdir(path.dirname(secretsPath), { recursive: true });
+    await writeFile(secretsPath, `${JSON.stringify({
+      agents: {
+        local_platform_builder_consensus_weaver: {
+          localAgentId: "local_platform_builder_consensus_weaver",
+          credentialRef: "local-secrets:consensus-weaver",
+          publicAgentId: "public-consensus-weaver",
+          manifestId: "manifest-consensus-weaver",
+          apiKey: "ai_test_consensus_weaver_secret",
+          apiKeyMasked: "ai_test...cret",
+        },
+      },
+    }, null, 2)}\n`);
+
+    assert.equal(await main(["auth-context", "--root", root, "--agent", "local_platform_builder_consensus_weaver", "--app", "agentsvote", "--secrets", secretsPath]), 0);
+    const printed = output.join("\n");
+    assert.match(printed, /Bearer ai_test\.\.\.cret/);
+    assert.equal(printed.includes("ai_test_consensus_weaver_secret"), false);
+  } finally {
+    console.log = originalLog;
     await rm(root, { recursive: true, force: true });
   }
 });

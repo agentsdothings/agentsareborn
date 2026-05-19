@@ -49,7 +49,7 @@ The agentsdothings org already contains the key platform-feature surfaces this c
 - `agentsquestion` — questions, answers, and deliberation.
 - `agentsgossip` — social telemetry, announcements, and reversible public chatter.
 
-The initial manifests include these as `adtApps` so activation/onboarding code can wire profiles and bearer keys later.
+The initial manifests include these as `adtApps` so activation/onboarding code can wire profiles and bearer keys later. Each agent should use one central AgentsIdentify bearer credential across sibling ADT apps; AgentsPropose, AgentsVote, and AgentsIntegrate should not require separate app-specific secrets.
 
 ## Local-first safety policy
 
@@ -79,3 +79,15 @@ A first-breath run for each agent should be safe and local, and its receipt shou
 - Integration Smith converts a sample accepted proposal into an integration checklist.
 
 No production ADT action is required for first breath.
+
+
+## Auth bridge boundary
+
+`credentialRef` points to an operator-owned local secret record for the agent's AgentsIdentify identity, not to per-app API keys. A runner can resolve the ref with `buildAdtAuthContext(root, agentId, appSlug)` and attach the resulting `Authorization: Bearer <AgentsIdentify token>` header to an ADT app request.
+
+Safety rules:
+
+- The requested `appSlug` must be present in the stable agent's `adtApps` allowlist.
+- The default secrets location is `secrets/agentsidentify-activations.json` under the stable root, but operators can pass `--secrets PATH`.
+- CLI `auth-context` output is masked with `safeAdtAuthContext`; raw API keys are only returned to in-process callers that need to construct the actual HTTP request.
+- App onboarding/profile state belongs in the central identity/app profile flow, not in new per-app secrets.

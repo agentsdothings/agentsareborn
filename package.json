@@ -32,6 +32,10 @@
       "types": "./dist/src/birth.d.ts",
       "import": "./dist/src/birth.js"
     },
+    "./auth-bridge": {
+      "types": "./dist/src/auth-bridge.d.ts",
+      "import": "./dist/src/auth-bridge.js"
+    },
     "./stable": {
       "types": "./dist/src/stable.d.ts",
       "import": "./dist/src/stable.js"
