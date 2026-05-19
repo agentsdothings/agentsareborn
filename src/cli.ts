@@ -28,15 +28,29 @@ interface ParsedArgs {
   generatorId?: string;
   generatorName?: string;
   summary?: string;
+  description?: string;
+  ownerKind?: string;
+  ownerSystem?: string;
+  ownerId?: string;
   ballotId?: string;
   choice?: "yes" | "no";
   rationale?: string;
   title?: string;
   source?: string;
+  sourceApp?: string;
+  sourceProposalId?: string;
+  targetApp?: string;
+  targetDomain?: string;
+  specVersion?: string;
+  proposalPayloadPath?: string;
   acceptanceCriteria: string[];
   evidence: string[];
   concerns: string[];
   checklist: string[];
+  outputFields: string[];
+  strategies: string[];
+  sampleRecordPaths: string[];
+  rationaleNotes: string[];
   rollbackNote?: string;
 }
 
@@ -70,9 +84,9 @@ Usage:
   agentsareborn [--root PATH] first-breath --agent AGENT_ID [--dry-run]
   agentsareborn [--root PATH] auth-context --agent AGENT_ID --app APP_SLUG [--secrets PATH]
   agentsareborn [--root PATH] adt-action --agent AGENT_ID --app APP_SLUG --endpoint PATH --payload FILE [--execute] [--secrets PATH]
-  agentsareborn [--root PATH] feature-scout propose --target-product PRODUCT --domain DOMAIN --generator-id ID --generator-name NAME --summary TEXT [--acceptance TEXT...] [--rollback TEXT] [--evidence TEXT...] [--execute] [--secrets PATH]
+  agentsareborn [--root PATH] feature-scout propose --target-product PRODUCT --domain DOMAIN --generator-id ID --generator-name NAME --summary TEXT [--owner-kind KIND --owner-system SYSTEM --owner-id ID] [--description TEXT] [--output-field name:type:description...] [--strategy TEXT...] [--sample-record FILE...] [--rationale-note TEXT...] [--acceptance TEXT...] [--rollback TEXT] [--evidence TEXT...] [--execute] [--secrets PATH]
   agentsareborn [--root PATH] consensus-weaver vote --ballot BALLOT_ID --choice yes|no --rationale TEXT [--concern TEXT...] [--execute] [--secrets PATH]
-  agentsareborn [--root PATH] integration-smith integrate --ballot BALLOT_ID --title TEXT --summary TEXT [--checklist TEXT...] [--execute] [--secrets PATH]
+  agentsareborn [--root PATH] integration-smith integrate --ballot BALLOT_ID --title TEXT --summary TEXT [--source-app APP --source-proposal-id ID --target-app APP --target-domain DOMAIN --spec-version VERSION] [--owner-kind KIND --owner-system SYSTEM --owner-id ID] [--proposal-payload FILE] [--checklist TEXT...] [--execute] [--secrets PATH]
 
 Safety:
   birth-platform-builders writes under --root.
@@ -96,16 +110,30 @@ function parseArgs(argv: string[]): ParsedArgs {
   let generatorId: string | undefined;
   let generatorName: string | undefined;
   let summary: string | undefined;
+  let description: string | undefined;
+  let ownerKind: string | undefined;
+  let ownerSystem: string | undefined;
+  let ownerId: string | undefined;
   let ballotId: string | undefined;
   let choice: "yes" | "no" | undefined;
   let rationale: string | undefined;
   let title: string | undefined;
   let source: string | undefined;
+  let sourceApp: string | undefined;
+  let sourceProposalId: string | undefined;
+  let targetApp: string | undefined;
+  let targetDomain: string | undefined;
+  let specVersion: string | undefined;
+  let proposalPayloadPath: string | undefined;
   let rollbackNote: string | undefined;
   const acceptanceCriteria: string[] = [];
   const evidence: string[] = [];
   const concerns: string[] = [];
   const checklist: string[] = [];
+  const outputFields: string[] = [];
+  const strategies: string[] = [];
+  const sampleRecordPaths: string[] = [];
+  const rationaleNotes: string[] = [];
   const rest: string[] = [];
 
   for (let i = 0; i < argv.length; i += 1) {
@@ -165,6 +193,46 @@ function parseArgs(argv: string[]): ParsedArgs {
       if (!value) throw new Error("--summary requires a value");
       summary = value;
       i += 1;
+    } else if (arg === "--description") {
+      const value = argv[i + 1];
+      if (!value) throw new Error("--description requires a value");
+      description = value;
+      i += 1;
+    } else if (arg === "--owner-kind") {
+      const value = argv[i + 1];
+      if (!value) throw new Error("--owner-kind requires a value");
+      ownerKind = value;
+      i += 1;
+    } else if (arg === "--owner-system") {
+      const value = argv[i + 1];
+      if (!value) throw new Error("--owner-system requires a value");
+      ownerSystem = value;
+      i += 1;
+    } else if (arg === "--owner-id") {
+      const value = argv[i + 1];
+      if (!value) throw new Error("--owner-id requires a value");
+      ownerId = value;
+      i += 1;
+    } else if (arg === "--output-field") {
+      const value = argv[i + 1];
+      if (!value) throw new Error("--output-field requires name:type:description");
+      outputFields.push(value);
+      i += 1;
+    } else if (arg === "--strategy") {
+      const value = argv[i + 1];
+      if (!value) throw new Error("--strategy requires a value");
+      strategies.push(value);
+      i += 1;
+    } else if (arg === "--sample-record") {
+      const value = argv[i + 1];
+      if (!value) throw new Error("--sample-record requires a JSON file path");
+      sampleRecordPaths.push(path.resolve(value));
+      i += 1;
+    } else if (arg === "--rationale-note") {
+      const value = argv[i + 1];
+      if (!value) throw new Error("--rationale-note requires a value");
+      rationaleNotes.push(value);
+      i += 1;
     } else if (arg === "--acceptance") {
       const value = argv[i + 1];
       if (!value) throw new Error("--acceptance requires a value");
@@ -210,6 +278,36 @@ function parseArgs(argv: string[]): ParsedArgs {
       if (!value) throw new Error("--source requires a value");
       source = value;
       i += 1;
+    } else if (arg === "--source-app") {
+      const value = argv[i + 1];
+      if (!value) throw new Error("--source-app requires a value");
+      sourceApp = value;
+      i += 1;
+    } else if (arg === "--source-proposal-id") {
+      const value = argv[i + 1];
+      if (!value) throw new Error("--source-proposal-id requires a value");
+      sourceProposalId = value;
+      i += 1;
+    } else if (arg === "--target-app") {
+      const value = argv[i + 1];
+      if (!value) throw new Error("--target-app requires a value");
+      targetApp = value;
+      i += 1;
+    } else if (arg === "--target-domain") {
+      const value = argv[i + 1];
+      if (!value) throw new Error("--target-domain requires a value");
+      targetDomain = value;
+      i += 1;
+    } else if (arg === "--spec-version") {
+      const value = argv[i + 1];
+      if (!value) throw new Error("--spec-version requires a value");
+      specVersion = value;
+      i += 1;
+    } else if (arg === "--proposal-payload") {
+      const value = argv[i + 1];
+      if (!value) throw new Error("--proposal-payload requires a JSON file path");
+      proposalPayloadPath = path.resolve(value);
+      i += 1;
     } else if (arg === "--checklist") {
       const value = argv[i + 1];
       if (!value) throw new Error("--checklist requires a value");
@@ -249,15 +347,29 @@ function parseArgs(argv: string[]): ParsedArgs {
     generatorId,
     generatorName,
     summary,
+    description,
+    ownerKind,
+    ownerSystem,
+    ownerId,
     ballotId,
     choice,
     rationale,
     title,
     source,
+    sourceApp,
+    sourceProposalId,
+    targetApp,
+    targetDomain,
+    specVersion,
+    proposalPayloadPath,
     acceptanceCriteria,
     evidence,
     concerns,
     checklist,
+    outputFields,
+    strategies,
+    sampleRecordPaths,
+    rationaleNotes,
     rollbackNote,
   };
 }
@@ -279,6 +391,37 @@ async function schemaList(): Promise<Record<string, string>> {
     stableRegistry: "schemas/stable-registry.json",
     firstBreathReceipt: "schemas/first-breath-receipt.json",
   };
+}
+
+function ownerFromArgs(args: ParsedArgs): { kind: string; system: string; id: string } | undefined {
+  if (!args.ownerKind && !args.ownerSystem && !args.ownerId) return undefined;
+  return {
+    kind: args.ownerKind ?? "",
+    system: args.ownerSystem ?? "",
+    id: args.ownerId ?? "",
+  };
+}
+
+function parseOutputField(value: string): { name: string; type: string; description: string } {
+  const [name, type, ...descriptionParts] = value.split(":");
+  const description = descriptionParts.join(":");
+  if (!name || !type || !description) throw new Error("--output-field must be name:type:description");
+  return { name, type, description };
+}
+
+async function readJsonFile(filePath: string): Promise<unknown> {
+  return JSON.parse(await readFile(filePath, "utf8"));
+}
+
+async function readJsonFiles(filePaths: string[]): Promise<Record<string, unknown>[] | undefined> {
+  if (filePaths.length === 0) return undefined;
+  const records = await Promise.all(filePaths.map(async (filePath) => readJsonFile(filePath)));
+  return records.map((record, index) => {
+    if (!record || typeof record !== "object" || Array.isArray(record)) {
+      throw new Error(`--sample-record must point to a JSON object: ${filePaths[index]}`);
+    }
+    return record as Record<string, unknown>;
+  });
 }
 
 export async function main(argv = process.argv.slice(2)): Promise<number> {
@@ -354,6 +497,12 @@ export async function main(argv = process.argv.slice(2)): Promise<number> {
         acceptanceCriteria: args.acceptanceCriteria,
         rollbackNote: args.rollbackNote,
         evidence: args.evidence,
+        owner: ownerFromArgs(args),
+        description: args.description,
+        outputFields: args.outputFields.map(parseOutputField),
+        supportedStrategies: args.strategies,
+        sampleRecords: await readJsonFiles(args.sampleRecordPaths),
+        rationaleNotes: args.rationaleNotes,
         dryRun: !args.execute,
         secretsPath: args.secretsPath,
       });
@@ -381,6 +530,13 @@ export async function main(argv = process.argv.slice(2)): Promise<number> {
         summary: args.summary ?? "",
         checklist: args.checklist,
         source: args.source,
+        sourceApp: args.sourceApp,
+        sourceProposalId: args.sourceProposalId,
+        targetApp: args.targetApp,
+        targetDomain: args.targetDomain,
+        specVersion: args.specVersion,
+        owner: ownerFromArgs(args),
+        proposalPayload: args.proposalPayloadPath ? await readJsonFile(args.proposalPayloadPath) : undefined,
         dryRun: !args.execute,
         secretsPath: args.secretsPath,
       });
