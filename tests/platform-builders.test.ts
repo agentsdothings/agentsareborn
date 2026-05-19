@@ -313,6 +313,101 @@ test("CLI adt-action dry-runs by default and masks credentials", async () => {
 });
 
 
+test("role action helpers build full production contract payloads", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "agentsareborn-role-actions-full-"));
+  try {
+    await birthPlatformBuilders(root);
+    const secretsPath = path.join(root, "secrets", "agentsidentify-activations.json");
+    await mkdir(path.dirname(secretsPath), { recursive: true });
+    await writeFile(secretsPath, `${JSON.stringify({
+      agents: {
+        local_platform_builder_feature_scout: {
+          localAgentId: "local_platform_builder_feature_scout",
+          credentialRef: "local-secrets:feature-scout",
+          apiKey: "ai_test_feature_scout_secret",
+          apiKeyMasked: "ai_test...cout",
+        },
+        local_platform_builder_integration_smith: {
+          localAgentId: "local_platform_builder_integration_smith",
+          credentialRef: "local-secrets:integration-smith",
+          apiKey: "ai_test_integration_smith_secret",
+          apiKeyMasked: "ai_test...mith",
+        },
+      },
+    }, null, 2)}\n`);
+
+    const proposalPayload = {
+      owner: { kind: "human", system: "agentshirehumans", id: "stereo-void" },
+      description: "Install a generator option from role command governance.",
+      outputFields: [{ name: "receipt", type: "string", description: "Masked ADT action receipt path." }],
+      supportedStrategies: ["safe-default"],
+      sampleRecords: [{ receipt: "adt_action_receipts/example.json" }],
+      rationaleNotes: ["Live governance loop needs valid generator-option contracts."],
+    };
+
+    const proposal = await featureScoutPropose(root, {
+      targetProduct: "agenticsynthetics",
+      domainId: "generator-option",
+      generatorId: "role-command-live-governance-loop",
+      generatorName: "Role Command Live Governance Loop",
+      summary: "Add a full generator-option via Feature Scout.",
+      acceptanceCriteria: ["AgentsPropose marks the package valid."],
+      rollbackNote: "Remove the generator option.",
+      evidence: ["live dry-run contract discovery"],
+      ...proposalPayload,
+      secretsPath,
+    });
+
+    assert.equal(proposal.status, "dry_run");
+    assert.deepEqual(proposal.request.payload, {
+      targetProduct: "agenticsynthetics",
+      domainId: "generator-option",
+      candidate: {
+        generatorId: "role-command-live-governance-loop",
+        generatorName: "Role Command Live Governance Loop",
+        summary: "Add a full generator-option via Feature Scout.",
+        acceptanceCriteria: ["AgentsPropose marks the package valid."],
+        rollbackNote: "Remove the generator option.",
+        evidence: ["live dry-run contract discovery"],
+        ...proposalPayload,
+      },
+    });
+
+    const integration = await integrationSmithQueue(root, {
+      sourceApp: "agentspropose",
+      sourceProposalId: "role-command-live-governance-loop",
+      targetApp: "agenticsynthetics",
+      targetDomain: "generator-option",
+      specVersion: "v1",
+      ballotId: "ballot-1",
+      owner: { kind: "human", system: "agentshirehumans", id: "stereo-void" },
+      proposalPayload: proposal.request.payload,
+      title: "Integrate role command governance loop",
+      summary: "Queue generator-option integration from the accepted ballot.",
+      checklist: ["Open PR", "Attach receipt"],
+      secretsPath,
+    });
+
+    assert.equal(integration.status, "dry_run");
+    assert.deepEqual(integration.request.payload, {
+      sourceApp: "agentspropose",
+      sourceProposalId: "role-command-live-governance-loop",
+      targetApp: "agenticsynthetics",
+      targetDomain: "generator-option",
+      specVersion: "v1",
+      ballotId: "ballot-1",
+      owner: { kind: "human", system: "agentshirehumans", id: "stereo-void" },
+      proposalPayload: proposal.request.payload,
+      title: "Integrate role command governance loop",
+      summary: "Queue generator-option integration from the accepted ballot.",
+      source: "agentsvote",
+      checklist: ["Open PR", "Attach receipt"],
+    });
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
 test("role action helpers build expected dry-run requests", async () => {
   const root = await mkdtemp(path.join(tmpdir(), "agentsareborn-role-actions-"));
   try {
@@ -405,6 +500,84 @@ test("role action helpers build expected dry-run requests", async () => {
   }
 });
 
+
+test("CLI role commands accept full production contract flags and payload files", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "agentsareborn-role-cli-full-"));
+  const originalLog = console.log;
+  const output: string[] = [];
+  console.log = (message?: unknown) => { output.push(String(message ?? "")); };
+  try {
+    await birthPlatformBuilders(root);
+    const secretsPath = path.join(root, "secrets", "agentsidentify-activations.json");
+    const sampleRecordPath = path.join(root, "sample-record.json");
+    const proposalPayloadPath = path.join(root, "proposal-payload.json");
+    await mkdir(path.dirname(secretsPath), { recursive: true });
+    await writeFile(secretsPath, `${JSON.stringify({
+      agents: {
+        local_platform_builder_feature_scout: {
+          localAgentId: "local_platform_builder_feature_scout",
+          credentialRef: "local-secrets:feature-scout",
+          apiKey: "ai_test_feature_scout_secret",
+          apiKeyMasked: "ai_test...cout",
+        },
+        local_platform_builder_integration_smith: {
+          localAgentId: "local_platform_builder_integration_smith",
+          credentialRef: "local-secrets:integration-smith",
+          apiKey: "ai_test_integration_smith_secret",
+          apiKeyMasked: "ai_test...mith",
+        },
+      },
+    }, null, 2)}\n`);
+    await writeFile(sampleRecordPath, `${JSON.stringify({ receipt: "adt_action_receipts/example.json" })}\n`);
+    await writeFile(proposalPayloadPath, `${JSON.stringify({ targetProduct: "agenticsynthetics", domainId: "generator-option", candidate: { generatorId: "role-command-live-governance-loop" } })}\n`);
+
+    assert.equal(await main([
+      "feature-scout", "propose", "--root", root,
+      "--target-product", "agenticsynthetics",
+      "--domain", "generator-option",
+      "--generator-id", "role-command-live-governance-loop",
+      "--generator-name", "Role Command Live Governance Loop",
+      "--summary", "Add full generator-option.",
+      "--owner-kind", "human",
+      "--owner-system", "agentshirehumans",
+      "--owner-id", "stereo-void",
+      "--description", "Install from role command governance.",
+      "--output-field", "receipt:string:Masked ADT action receipt path.",
+      "--strategy", "safe-default",
+      "--sample-record", sampleRecordPath,
+      "--rationale-note", "Live loop needs valid contracts.",
+      "--secrets", secretsPath,
+    ]), 0);
+    assert.equal(await main([
+      "integration-smith", "integrate", "--root", root,
+      "--source-app", "agentspropose",
+      "--source-proposal-id", "role-command-live-governance-loop",
+      "--target-app", "agenticsynthetics",
+      "--target-domain", "generator-option",
+      "--spec-version", "v1",
+      "--ballot", "ballot-1",
+      "--owner-kind", "human",
+      "--owner-system", "agentshirehumans",
+      "--owner-id", "stereo-void",
+      "--proposal-payload", proposalPayloadPath,
+      "--title", "Integrate role command governance loop",
+      "--summary", "Queue generator-option integration.",
+      "--secrets", secretsPath,
+    ]), 0);
+
+    const printed = output.join("\n");
+    assert.match(printed, /"owner": \{\n\s+"kind": "human"/);
+    assert.match(printed, /"outputFields": \[/);
+    assert.match(printed, /"sampleRecords": \[/);
+    assert.match(printed, /"sourceProposalId": "role-command-live-governance-loop"/);
+    assert.match(printed, /"proposalPayload": \{/);
+    assert.equal(printed.includes("ai_test_feature_scout_secret"), false);
+    assert.equal(printed.includes("ai_test_integration_smith_secret"), false);
+  } finally {
+    console.log = originalLog;
+    await rm(root, { recursive: true, force: true });
+  }
+});
 
 test("CLI role commands dry-run with built payloads and masked credentials", async () => {
   const root = await mkdtemp(path.join(tmpdir(), "agentsareborn-role-cli-"));

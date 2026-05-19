@@ -10,6 +10,18 @@ export interface RoleActionCommonOptions extends Pick<RunAdtActionOptions, "secr
   dryRun?: boolean;
 }
 
+export interface AdtOwner {
+  kind: string;
+  system: string;
+  id: string;
+}
+
+export interface GeneratorOutputField {
+  name: string;
+  type: string;
+  description: string;
+}
+
 export interface FeatureScoutProposalOptions extends RoleActionCommonOptions {
   targetProduct: string;
   domainId: string;
@@ -19,6 +31,12 @@ export interface FeatureScoutProposalOptions extends RoleActionCommonOptions {
   acceptanceCriteria?: string[];
   rollbackNote?: string;
   evidence?: string[];
+  owner?: AdtOwner;
+  description?: string;
+  outputFields?: GeneratorOutputField[];
+  supportedStrategies?: string[];
+  sampleRecords?: Record<string, unknown>[];
+  rationaleNotes?: string[];
 }
 
 export interface ConsensusWeaverVoteOptions extends RoleActionCommonOptions {
@@ -34,6 +52,13 @@ export interface IntegrationSmithQueueOptions extends RoleActionCommonOptions {
   summary: string;
   checklist?: string[];
   source?: string;
+  sourceApp?: string;
+  sourceProposalId?: string;
+  targetApp?: string;
+  targetDomain?: string;
+  specVersion?: string;
+  owner?: AdtOwner;
+  proposalPayload?: unknown;
 }
 
 function cleanList(values: string[] | undefined): string[] | undefined {
@@ -51,7 +76,35 @@ function encodePathSegment(segment: string): string {
   return encodeURIComponent(segment).replace(/%2F/gi, "%252F");
 }
 
+function cleanText(value: string | undefined): string | undefined {
+  const cleaned = value?.trim();
+  return cleaned || undefined;
+}
+
+function cleanOwner(owner: AdtOwner | undefined): AdtOwner | undefined {
+  if (!owner) return undefined;
+  return {
+    kind: requireText("owner.kind", owner.kind),
+    system: requireText("owner.system", owner.system),
+    id: requireText("owner.id", owner.id),
+  };
+}
+
+function cleanOutputFields(fields: GeneratorOutputField[] | undefined): GeneratorOutputField[] | undefined {
+  const cleaned = (fields ?? []).map((field) => ({
+    name: requireText("outputField.name", field.name),
+    type: requireText("outputField.type", field.type),
+    description: requireText("outputField.description", field.description),
+  }));
+  return cleaned.length > 0 ? cleaned : undefined;
+}
+
 export async function featureScoutPropose(root: string, options: FeatureScoutProposalOptions): Promise<AdtActionReceipt> {
+  const owner = cleanOwner(options.owner);
+  const outputFields = cleanOutputFields(options.outputFields);
+  const supportedStrategies = cleanList(options.supportedStrategies);
+  const sampleRecords = options.sampleRecords?.length ? options.sampleRecords : undefined;
+  const rationaleNotes = cleanList(options.rationaleNotes);
   return runAdtAction(root, {
     agentId: PLATFORM_BUILDER_AGENTS.featureScout,
     appSlug: "agentspropose",
@@ -66,6 +119,12 @@ export async function featureScoutPropose(root: string, options: FeatureScoutPro
         ...(cleanList(options.acceptanceCriteria) ? { acceptanceCriteria: cleanList(options.acceptanceCriteria) } : {}),
         ...(options.rollbackNote?.trim() ? { rollbackNote: options.rollbackNote.trim() } : {}),
         ...(cleanList(options.evidence) ? { evidence: cleanList(options.evidence) } : {}),
+        ...(owner ? { owner } : {}),
+        ...(cleanText(options.description) ? { description: cleanText(options.description) } : {}),
+        ...(outputFields ? { outputFields } : {}),
+        ...(supportedStrategies ? { supportedStrategies } : {}),
+        ...(sampleRecords ? { sampleRecords } : {}),
+        ...(rationaleNotes ? { rationaleNotes } : {}),
       },
     },
     dryRun: options.dryRun ?? true,
@@ -92,12 +151,20 @@ export async function consensusWeaverVote(root: string, options: ConsensusWeaver
 }
 
 export async function integrationSmithQueue(root: string, options: IntegrationSmithQueueOptions): Promise<AdtActionReceipt> {
+  const owner = cleanOwner(options.owner);
   return runAdtAction(root, {
     agentId: PLATFORM_BUILDER_AGENTS.integrationSmith,
     appSlug: "agentsintegrate",
     endpointPath: "/api/queue",
     payload: {
+      ...(cleanText(options.sourceApp) ? { sourceApp: cleanText(options.sourceApp) } : {}),
+      ...(cleanText(options.sourceProposalId) ? { sourceProposalId: cleanText(options.sourceProposalId) } : {}),
+      ...(cleanText(options.targetApp) ? { targetApp: cleanText(options.targetApp) } : {}),
+      ...(cleanText(options.targetDomain) ? { targetDomain: cleanText(options.targetDomain) } : {}),
+      ...(cleanText(options.specVersion) ? { specVersion: cleanText(options.specVersion) } : {}),
       ballotId: requireText("ballotId", options.ballotId),
+      ...(owner ? { owner } : {}),
+      ...(options.proposalPayload !== undefined ? { proposalPayload: options.proposalPayload } : {}),
       title: requireText("title", options.title),
       summary: requireText("summary", options.summary),
       source: options.source?.trim() || "agentsvote",
