@@ -121,3 +121,45 @@ agentsareborn adt-action \
 ```
 
 `--execute` sends `Authorization: Bearer <AgentsIdentify token>` to the selected app and writes a safe receipt under `adt_action_receipts/`; raw credentials are never written to receipts or printed to stdout. Binding/public actions such as votes and integration queue mutation still depend on stable policy and operator authorization.
+
+## Role convenience commands
+
+Role commands are thin dry-run-first wrappers over `adt-action`. They select the stable agent, ADT app, endpoint, and payload shape for the platform-builder role so operators do not need to hand-write JSON payload files.
+
+Feature Scout proposes via AgentsPropose:
+
+```bash
+agentsareborn feature-scout propose \
+  --root ./local \
+  --target-product agenticsynthetics \
+  --domain generator-option \
+  --generator-id release-smoke-receipts \
+  --generator-name "Release Smoke Receipts" \
+  --summary "Attach smoke-test receipts to packaged ADT CLI releases." \
+  --acceptance "Packed CLI installs in a temp project." \
+  --rollback "Remove the release smoke-test step."
+```
+
+Consensus Weaver votes via AgentsVote:
+
+```bash
+agentsareborn consensus-weaver vote \
+  --root ./local \
+  --ballot ballot-1 \
+  --choice yes \
+  --rationale "Low risk, reversible, and evidence-backed."
+```
+
+Integration Smith queues accepted work via AgentsIntegrate:
+
+```bash
+agentsareborn integration-smith integrate \
+  --root ./local \
+  --ballot ballot-1 \
+  --title "Wire packaged CLI smoke tests" \
+  --summary "Create an integration handoff from the accepted ballot." \
+  --checklist "Open the implementation PR" \
+  --checklist "Attach the smoke-test receipt"
+```
+
+All three commands remain dry-run only unless `--execute` is passed. On execution, they use the same central AgentsIdentify bearer credential and masked receipt boundary as `adt-action`.

@@ -8,11 +8,13 @@ import { runAdtAction, safeAdtActionReceipt } from "./adt-action-runner.js";
 import { buildAdtAuthContext, safeAdtAuthContext } from "./auth-bridge.js";
 import { birthPlatformBuilders } from "./birth.js";
 import { firstBreath } from "./first-breath.js";
+import { consensusWeaverVote, featureScoutPropose, integrationSmithQueue } from "./role-actions.js";
 import { StableStore } from "./stable.js";
 import { validateJsonArtifacts } from "../scripts/validate-json.js";
 
 interface ParsedArgs {
   command: string;
+  subcommand?: string;
   root: string;
   agentId?: string;
   appSlug?: string;
@@ -21,6 +23,21 @@ interface ParsedArgs {
   secretsPath?: string;
   execute: boolean;
   dryRun: boolean;
+  targetProduct?: string;
+  domainId?: string;
+  generatorId?: string;
+  generatorName?: string;
+  summary?: string;
+  ballotId?: string;
+  choice?: "yes" | "no";
+  rationale?: string;
+  title?: string;
+  source?: string;
+  acceptanceCriteria: string[];
+  evidence: string[];
+  concerns: string[];
+  checklist: string[];
+  rollbackNote?: string;
 }
 
 const COMMANDS = [
@@ -34,6 +51,9 @@ const COMMANDS = [
   "first-breath",
   "auth-context",
   "adt-action",
+  "feature-scout",
+  "consensus-weaver",
+  "integration-smith",
 ] as const;
 
 function usage(): string {
@@ -50,12 +70,15 @@ Usage:
   agentsareborn [--root PATH] first-breath --agent AGENT_ID [--dry-run]
   agentsareborn [--root PATH] auth-context --agent AGENT_ID --app APP_SLUG [--secrets PATH]
   agentsareborn [--root PATH] adt-action --agent AGENT_ID --app APP_SLUG --endpoint PATH --payload FILE [--execute] [--secrets PATH]
+  agentsareborn [--root PATH] feature-scout propose --target-product PRODUCT --domain DOMAIN --generator-id ID --generator-name NAME --summary TEXT [--acceptance TEXT...] [--rollback TEXT] [--evidence TEXT...] [--execute] [--secrets PATH]
+  agentsareborn [--root PATH] consensus-weaver vote --ballot BALLOT_ID --choice yes|no --rationale TEXT [--concern TEXT...] [--execute] [--secrets PATH]
+  agentsareborn [--root PATH] integration-smith integrate --ballot BALLOT_ID --title TEXT --summary TEXT [--checklist TEXT...] [--execute] [--secrets PATH]
 
 Safety:
   birth-platform-builders writes under --root.
   first-breath is local-only and refuses network-requiring manifests by default.
   auth-context prints a masked AgentsIdentify bearer context; it never prints raw API keys.
-  adt-action dry-runs by default; pass --execute to send the request.
+  adt-action and role commands dry-run by default; pass --execute to send the request.
 `;
 }
 
@@ -68,6 +91,21 @@ function parseArgs(argv: string[]): ParsedArgs {
   let secretsPath: string | undefined;
   let execute = false;
   let dryRun = false;
+  let targetProduct: string | undefined;
+  let domainId: string | undefined;
+  let generatorId: string | undefined;
+  let generatorName: string | undefined;
+  let summary: string | undefined;
+  let ballotId: string | undefined;
+  let choice: "yes" | "no" | undefined;
+  let rationale: string | undefined;
+  let title: string | undefined;
+  let source: string | undefined;
+  let rollbackNote: string | undefined;
+  const acceptanceCriteria: string[] = [];
+  const evidence: string[] = [];
+  const concerns: string[] = [];
+  const checklist: string[] = [];
   const rest: string[] = [];
 
   for (let i = 0; i < argv.length; i += 1) {
@@ -102,6 +140,81 @@ function parseArgs(argv: string[]): ParsedArgs {
       if (!value) throw new Error("--secrets requires a path");
       secretsPath = path.resolve(value);
       i += 1;
+    } else if (arg === "--target-product") {
+      const value = argv[i + 1];
+      if (!value) throw new Error("--target-product requires a value");
+      targetProduct = value;
+      i += 1;
+    } else if (arg === "--domain") {
+      const value = argv[i + 1];
+      if (!value) throw new Error("--domain requires a value");
+      domainId = value;
+      i += 1;
+    } else if (arg === "--generator-id") {
+      const value = argv[i + 1];
+      if (!value) throw new Error("--generator-id requires a value");
+      generatorId = value;
+      i += 1;
+    } else if (arg === "--generator-name") {
+      const value = argv[i + 1];
+      if (!value) throw new Error("--generator-name requires a value");
+      generatorName = value;
+      i += 1;
+    } else if (arg === "--summary") {
+      const value = argv[i + 1];
+      if (!value) throw new Error("--summary requires a value");
+      summary = value;
+      i += 1;
+    } else if (arg === "--acceptance") {
+      const value = argv[i + 1];
+      if (!value) throw new Error("--acceptance requires a value");
+      acceptanceCriteria.push(value);
+      i += 1;
+    } else if (arg === "--rollback") {
+      const value = argv[i + 1];
+      if (!value) throw new Error("--rollback requires a value");
+      rollbackNote = value;
+      i += 1;
+    } else if (arg === "--evidence") {
+      const value = argv[i + 1];
+      if (!value) throw new Error("--evidence requires a value");
+      evidence.push(value);
+      i += 1;
+    } else if (arg === "--ballot") {
+      const value = argv[i + 1];
+      if (!value) throw new Error("--ballot requires an id");
+      ballotId = value;
+      i += 1;
+    } else if (arg === "--choice") {
+      const value = argv[i + 1];
+      if (value !== "yes" && value !== "no") throw new Error("--choice must be yes or no");
+      choice = value;
+      i += 1;
+    } else if (arg === "--rationale") {
+      const value = argv[i + 1];
+      if (!value) throw new Error("--rationale requires a value");
+      rationale = value;
+      i += 1;
+    } else if (arg === "--concern") {
+      const value = argv[i + 1];
+      if (!value) throw new Error("--concern requires a value");
+      concerns.push(value);
+      i += 1;
+    } else if (arg === "--title") {
+      const value = argv[i + 1];
+      if (!value) throw new Error("--title requires a value");
+      title = value;
+      i += 1;
+    } else if (arg === "--source") {
+      const value = argv[i + 1];
+      if (!value) throw new Error("--source requires a value");
+      source = value;
+      i += 1;
+    } else if (arg === "--checklist") {
+      const value = argv[i + 1];
+      if (!value) throw new Error("--checklist requires a value");
+      checklist.push(value);
+      i += 1;
     } else if (arg === "--execute") {
       execute = true;
     } else if (arg === "--dry-run") {
@@ -116,10 +229,37 @@ function parseArgs(argv: string[]): ParsedArgs {
   }
 
   const command = rest[0] ?? "help";
+  const subcommand = rest[1];
   if (!COMMANDS.includes(command as (typeof COMMANDS)[number])) {
     throw new Error(usage());
   }
-  return { command, root, agentId, appSlug, endpointPath, payloadPath, secretsPath, execute, dryRun };
+  return {
+    command,
+    subcommand,
+    root,
+    agentId,
+    appSlug,
+    endpointPath,
+    payloadPath,
+    secretsPath,
+    execute,
+    dryRun,
+    targetProduct,
+    domainId,
+    generatorId,
+    generatorName,
+    summary,
+    ballotId,
+    choice,
+    rationale,
+    title,
+    source,
+    acceptanceCriteria,
+    evidence,
+    concerns,
+    checklist,
+    rollbackNote,
+  };
 }
 
 async function packageVersion(): Promise<string> {
@@ -199,6 +339,50 @@ export async function main(argv = process.argv.slice(2)): Promise<number> {
         dryRun: !args.execute,
         secretsPath: args.secretsPath,
         writeReceipt: args.execute,
+      });
+      console.log(JSON.stringify(safeAdtActionReceipt(receipt), null, 2));
+      return receipt.status === "failed" ? 1 : 0;
+    }
+    if (args.command === "feature-scout") {
+      if (args.subcommand !== "propose") throw new Error("feature-scout requires subcommand: propose");
+      const receipt = await featureScoutPropose(args.root, {
+        targetProduct: args.targetProduct ?? "",
+        domainId: args.domainId ?? "",
+        generatorId: args.generatorId ?? "",
+        generatorName: args.generatorName ?? "",
+        summary: args.summary ?? "",
+        acceptanceCriteria: args.acceptanceCriteria,
+        rollbackNote: args.rollbackNote,
+        evidence: args.evidence,
+        dryRun: !args.execute,
+        secretsPath: args.secretsPath,
+      });
+      console.log(JSON.stringify(safeAdtActionReceipt(receipt), null, 2));
+      return receipt.status === "failed" ? 1 : 0;
+    }
+    if (args.command === "consensus-weaver") {
+      if (args.subcommand !== "vote") throw new Error("consensus-weaver requires subcommand: vote");
+      const receipt = await consensusWeaverVote(args.root, {
+        ballotId: args.ballotId ?? "",
+        choice: args.choice ?? "yes",
+        rationale: args.rationale ?? "",
+        concerns: args.concerns,
+        dryRun: !args.execute,
+        secretsPath: args.secretsPath,
+      });
+      console.log(JSON.stringify(safeAdtActionReceipt(receipt), null, 2));
+      return receipt.status === "failed" ? 1 : 0;
+    }
+    if (args.command === "integration-smith") {
+      if (args.subcommand !== "integrate") throw new Error("integration-smith requires subcommand: integrate");
+      const receipt = await integrationSmithQueue(args.root, {
+        ballotId: args.ballotId ?? "",
+        title: args.title ?? "",
+        summary: args.summary ?? "",
+        checklist: args.checklist,
+        source: args.source,
+        dryRun: !args.execute,
+        secretsPath: args.secretsPath,
       });
       console.log(JSON.stringify(safeAdtActionReceipt(receipt), null, 2));
       return receipt.status === "failed" ? 1 : 0;
