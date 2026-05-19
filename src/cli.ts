@@ -4,6 +4,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { runAdtAction, safeAdtActionReceipt } from "./adt-action-runner.js";
 import { buildAdtAuthContext, safeAdtAuthContext } from "./auth-bridge.js";
 import { birthPlatformBuilders } from "./birth.js";
 import { firstBreath } from "./first-breath.js";
@@ -15,7 +16,10 @@ interface ParsedArgs {
   root: string;
   agentId?: string;
   appSlug?: string;
+  endpointPath?: string;
+  payloadPath?: string;
   secretsPath?: string;
+  execute: boolean;
   dryRun: boolean;
 }
 
@@ -29,6 +33,7 @@ const COMMANDS = [
   "doctor",
   "first-breath",
   "auth-context",
+  "adt-action",
 ] as const;
 
 function usage(): string {
@@ -44,11 +49,13 @@ Usage:
   agentsareborn [--root PATH] stable-list [--root PATH]
   agentsareborn [--root PATH] first-breath --agent AGENT_ID [--dry-run]
   agentsareborn [--root PATH] auth-context --agent AGENT_ID --app APP_SLUG [--secrets PATH]
+  agentsareborn [--root PATH] adt-action --agent AGENT_ID --app APP_SLUG --endpoint PATH --payload FILE [--execute] [--secrets PATH]
 
 Safety:
   birth-platform-builders writes under --root.
   first-breath is local-only and refuses network-requiring manifests by default.
   auth-context prints a masked AgentsIdentify bearer context; it never prints raw API keys.
+  adt-action dry-runs by default; pass --execute to send the request.
 `;
 }
 
@@ -56,7 +63,10 @@ function parseArgs(argv: string[]): ParsedArgs {
   let root = process.cwd();
   let agentId: string | undefined;
   let appSlug: string | undefined;
+  let endpointPath: string | undefined;
+  let payloadPath: string | undefined;
   let secretsPath: string | undefined;
+  let execute = false;
   let dryRun = false;
   const rest: string[] = [];
 
@@ -77,11 +87,23 @@ function parseArgs(argv: string[]): ParsedArgs {
       if (!value) throw new Error("--app requires an ADT app slug");
       appSlug = value;
       i += 1;
+    } else if (arg === "--endpoint") {
+      const value = argv[i + 1];
+      if (!value) throw new Error("--endpoint requires a path");
+      endpointPath = value;
+      i += 1;
+    } else if (arg === "--payload") {
+      const value = argv[i + 1];
+      if (!value) throw new Error("--payload requires a file path");
+      payloadPath = path.resolve(value);
+      i += 1;
     } else if (arg === "--secrets") {
       const value = argv[i + 1];
       if (!value) throw new Error("--secrets requires a path");
       secretsPath = path.resolve(value);
       i += 1;
+    } else if (arg === "--execute") {
+      execute = true;
     } else if (arg === "--dry-run") {
       dryRun = true;
     } else if (arg === "--help" || arg === "-h") {
@@ -97,7 +119,7 @@ function parseArgs(argv: string[]): ParsedArgs {
   if (!COMMANDS.includes(command as (typeof COMMANDS)[number])) {
     throw new Error(usage());
   }
-  return { command, root, agentId, appSlug, secretsPath, dryRun };
+  return { command, root, agentId, appSlug, endpointPath, payloadPath, secretsPath, execute, dryRun };
 }
 
 async function packageVersion(): Promise<string> {
@@ -163,6 +185,23 @@ export async function main(argv = process.argv.slice(2)): Promise<number> {
       const context = await buildAdtAuthContext(args.root, args.agentId, args.appSlug, { secretsPath: args.secretsPath });
       console.log(JSON.stringify(safeAdtAuthContext(context), null, 2));
       return 0;
+    }
+    if (args.command === "adt-action") {
+      if (!args.agentId) throw new Error("adt-action requires --agent AGENT_ID");
+      if (!args.appSlug) throw new Error("adt-action requires --app APP_SLUG");
+      if (!args.endpointPath) throw new Error("adt-action requires --endpoint PATH");
+      const payload = args.payloadPath ? JSON.parse(await readFile(args.payloadPath, "utf8")) : undefined;
+      const receipt = await runAdtAction(args.root, {
+        agentId: args.agentId,
+        appSlug: args.appSlug,
+        endpointPath: args.endpointPath,
+        payload,
+        dryRun: !args.execute,
+        secretsPath: args.secretsPath,
+        writeReceipt: args.execute,
+      });
+      console.log(JSON.stringify(safeAdtActionReceipt(receipt), null, 2));
+      return receipt.status === "failed" ? 1 : 0;
     }
     return 1;
   } catch (error) {

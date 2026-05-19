@@ -36,6 +36,10 @@
       "types": "./dist/src/auth-bridge.d.ts",
       "import": "./dist/src/auth-bridge.js"
     },
+    "./adt-action-runner": {
+      "types": "./dist/src/adt-action-runner.d.ts",
+      "import": "./dist/src/adt-action-runner.js"
+    },
     "./stable": {
       "types": "./dist/src/stable.d.ts",
       "import": "./dist/src/stable.js"
