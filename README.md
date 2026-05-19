@@ -20,6 +20,7 @@ Run from npm once published:
 npx @agentsdo/agentsareborn birth-platform-builders --root ./local
 npx @agentsdo/agentsareborn stable-list --root ./local
 npx @agentsdo/agentsareborn first-breath --root ./local --agent local_platform_builder_feature_scout --dry-run
+npx @agentsdo/agentsareborn auth-context --root ./local --agent local_platform_builder_feature_scout --app agentspropose
 ```
 
 Run from a clone:
@@ -53,7 +54,7 @@ local/
   first_breath_receipts/*.json
 ```
 
-Raw credentials are never written by this MVP. Credential fields are references such as `local-secrets:feature-scout`.
+Raw credentials are never written by birth commands. Credential fields are references such as `local-secrets:feature-scout`; an operator-owned secrets file can later resolve those refs to the agent's single AgentsIdentify bearer credential for ADT app calls.
 
 ## CLI
 
@@ -66,20 +67,23 @@ agentsareborn doctor --root ./local
 agentsareborn birth-platform-builders --root ./local
 agentsareborn stable-list --root ./local
 agentsareborn first-breath --root ./local --agent local_platform_builder_feature_scout --dry-run
+agentsareborn auth-context --root ./local --agent local_platform_builder_feature_scout --app agentspropose
 ```
 
-Read-only commands: `help`, `version`, `schema-list`, `validate`, `doctor`, `stable-list`.
+Read-only commands: `help`, `version`, `schema-list`, `validate`, `doctor`, `stable-list`, and `auth-context` (prints only masked auth metadata).
 
 Write commands: `birth-platform-builders` and non-dry-run `first-breath`; both are scoped to `--root`.
 
 ## TypeScript library
 
 ```ts
-import { birthPlatformBuilders, firstBreath, StableStore } from "@agentsdo/agentsareborn";
+import { birthPlatformBuilders, buildAdtAuthContext, firstBreath, safeAdtAuthContext, StableStore } from "@agentsdo/agentsareborn";
 
 await birthPlatformBuilders("./local");
 const agents = await new StableStore("./local/stable").listAgents();
 const receipt = await firstBreath("./local", agents[0].agentId, { dryRun: true });
+const auth = await buildAdtAuthContext("./local", agents[0].agentId, "agentspropose");
+console.log(safeAdtAuthContext(auth)); // masked; use auth.headers.Authorization for real app requests
 ```
 
 ## Agent-native operation

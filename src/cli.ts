@@ -4,6 +4,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { buildAdtAuthContext, safeAdtAuthContext } from "./auth-bridge.js";
 import { birthPlatformBuilders } from "./birth.js";
 import { firstBreath } from "./first-breath.js";
 import { StableStore } from "./stable.js";
@@ -13,6 +14,8 @@ interface ParsedArgs {
   command: string;
   root: string;
   agentId?: string;
+  appSlug?: string;
+  secretsPath?: string;
   dryRun: boolean;
 }
 
@@ -25,6 +28,7 @@ const COMMANDS = [
   "validate",
   "doctor",
   "first-breath",
+  "auth-context",
 ] as const;
 
 function usage(): string {
@@ -39,16 +43,20 @@ Usage:
   agentsareborn [--root PATH] birth-platform-builders [--root PATH]
   agentsareborn [--root PATH] stable-list [--root PATH]
   agentsareborn [--root PATH] first-breath --agent AGENT_ID [--dry-run]
+  agentsareborn [--root PATH] auth-context --agent AGENT_ID --app APP_SLUG [--secrets PATH]
 
 Safety:
   birth-platform-builders writes under --root.
   first-breath is local-only and refuses network-requiring manifests by default.
+  auth-context prints a masked AgentsIdentify bearer context; it never prints raw API keys.
 `;
 }
 
 function parseArgs(argv: string[]): ParsedArgs {
   let root = process.cwd();
   let agentId: string | undefined;
+  let appSlug: string | undefined;
+  let secretsPath: string | undefined;
   let dryRun = false;
   const rest: string[] = [];
 
@@ -63,6 +71,16 @@ function parseArgs(argv: string[]): ParsedArgs {
       const value = argv[i + 1];
       if (!value) throw new Error("--agent requires an agent id");
       agentId = value;
+      i += 1;
+    } else if (arg === "--app") {
+      const value = argv[i + 1];
+      if (!value) throw new Error("--app requires an ADT app slug");
+      appSlug = value;
+      i += 1;
+    } else if (arg === "--secrets") {
+      const value = argv[i + 1];
+      if (!value) throw new Error("--secrets requires a path");
+      secretsPath = path.resolve(value);
       i += 1;
     } else if (arg === "--dry-run") {
       dryRun = true;
@@ -79,7 +97,7 @@ function parseArgs(argv: string[]): ParsedArgs {
   if (!COMMANDS.includes(command as (typeof COMMANDS)[number])) {
     throw new Error(usage());
   }
-  return { command, root, agentId, dryRun };
+  return { command, root, agentId, appSlug, secretsPath, dryRun };
 }
 
 async function packageVersion(): Promise<string> {
@@ -137,6 +155,13 @@ export async function main(argv = process.argv.slice(2)): Promise<number> {
     if (args.command === "first-breath") {
       if (!args.agentId) throw new Error("first-breath requires --agent AGENT_ID");
       console.log(JSON.stringify(await firstBreath(args.root, args.agentId, { dryRun: args.dryRun }), null, 2));
+      return 0;
+    }
+    if (args.command === "auth-context") {
+      if (!args.agentId) throw new Error("auth-context requires --agent AGENT_ID");
+      if (!args.appSlug) throw new Error("auth-context requires --app APP_SLUG");
+      const context = await buildAdtAuthContext(args.root, args.agentId, args.appSlug, { secretsPath: args.secretsPath });
+      console.log(JSON.stringify(safeAdtAuthContext(context), null, 2));
       return 0;
     }
     return 1;
