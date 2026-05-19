@@ -40,6 +40,10 @@
       "types": "./dist/src/adt-action-runner.d.ts",
       "import": "./dist/src/adt-action-runner.js"
     },
+    "./role-actions": {
+      "types": "./dist/src/role-actions.d.ts",
+      "import": "./dist/src/role-actions.js"
+    },
     "./stable": {
       "types": "./dist/src/stable.d.ts",
       "import": "./dist/src/stable.js"
@@ -85,7 +89,7 @@
     "prepack": "npm run verify",
     "prepublishOnly": "npm run verify",
     "pack:dry-run": "npm pack --dry-run",
-    "smoke:package": "npm run build && node -e \"import('./dist/src/index.js').then(m=>{ if (!m.birthPlatformBuilders || !m.firstBreath || !m.StableStore) process.exit(1) })\" && test \"$(node dist/src/cli.js version)\" = \"0.1.0\""
+    "smoke:package": "npm run build && node -e \"import('./dist/src/index.js').then(m=>{ if (!m.birthPlatformBuilders || !m.firstBreath || !m.StableStore || !m.featureScoutPropose) process.exit(1) })\" && test \"$(node dist/src/cli.js version)\" = \"0.1.0\""
   },
   "devDependencies": {
     "@types/node": "^22.10.0",
