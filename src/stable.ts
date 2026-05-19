@@ -101,4 +101,14 @@ export class StableStore {
   async listAgents(): Promise<StableAgent[]> {
     return (await this.load()).agents;
   }
+
+  async recordRun(agentId: string, completedAt = utcNow()): Promise<StableAgent> {
+    const stable = await this.load();
+    const index = stable.agents.findIndex((agent) => agent.agentId === agentId);
+    if (index === -1) throw new Error(`agent not found in stable: ${agentId}`);
+    const updated: StableAgent = { ...stable.agents[index], lastRunAt: completedAt };
+    stable.agents[index] = updated;
+    await this.save(stable);
+    return updated;
+  }
 }

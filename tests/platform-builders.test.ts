@@ -68,7 +68,7 @@ test("StableStore adds an agent and lists it without raw credentials", async () 
   }
 });
 
-test("firstBreath emits a local-only receipt and denies privileged actions", async () => {
+test("firstBreath emits a local-only receipt with role-specific task output", async () => {
   const root = await mkdtemp(path.join(tmpdir(), "agentsareborn-first-breath-"));
   try {
     await birthPlatformBuilders(root);
@@ -78,6 +78,31 @@ test("firstBreath emits a local-only receipt and denies privileged actions", asy
     assert.equal(receipt.artifact.kind, "agentspropose.draft");
     assert.ok(receipt.actionsDenied.includes("credential resolution"));
     assert.equal(receipt.filesWritten.length, 0);
+    assert.equal(receipt.taskOutput.role, "propose");
+    assert.match(receipt.taskOutput.proposal, /first-breath receipts/i);
+    assert.ok(receipt.taskOutput.acceptanceCriteria.length >= 3);
+    assert.match(receipt.taskOutput.rollbackNote, /revert/i);
+    assert.ok(receipt.taskOutput.evidenceUsed.some((evidence) => evidence.includes("manifest")));
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("firstBreath records non-dry-run receipts and updates stable lastRunAt", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "agentsareborn-first-breath-write-"));
+  try {
+    await birthPlatformBuilders(root);
+    const receipt = await firstBreath(root, "local_platform_builder_consensus_weaver");
+    assert.equal(receipt.status, "completed");
+    assert.deepEqual(receipt.filesWritten, ["first_breath_receipts/local_platform_builder_consensus_weaver.json"]);
+    assert.equal(receipt.taskOutput.role, "vote");
+
+    const saved = JSON.parse(await readFile(path.join(root, receipt.filesWritten[0]), "utf8"));
+    assert.equal(saved.taskOutput.role, "vote");
+
+    const agents = await new StableStore(path.join(root, "stable")).listAgents();
+    const agent = agents.find((candidate) => candidate.agentId === "local_platform_builder_consensus_weaver");
+    assert.equal(agent?.lastRunAt, receipt.completedAt);
   } finally {
     await rm(root, { recursive: true, force: true });
   }

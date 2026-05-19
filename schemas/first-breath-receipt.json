@@ -59,6 +59,44 @@
       "type": "object",
       "additionalProperties": true
     },
+    "taskOutput": {
+      "type": "object",
+      "required": [
+        "role",
+        "summary",
+        "proposal",
+        "acceptanceCriteria",
+        "rollbackNote",
+        "evidenceUsed"
+      ],
+      "properties": {
+        "role": {
+          "type": "string"
+        },
+        "summary": {
+          "type": "string"
+        },
+        "proposal": {
+          "type": "string"
+        },
+        "acceptanceCriteria": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "rollbackNote": {
+          "type": "string"
+        },
+        "evidenceUsed": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
     "verificationNote": {
       "type": "string"
     },
