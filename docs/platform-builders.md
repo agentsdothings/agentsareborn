@@ -91,3 +91,33 @@ Safety rules:
 - The default secrets location is `secrets/agentsidentify-activations.json` under the stable root, but operators can pass `--secrets PATH`.
 - CLI `auth-context` output is masked with `safeAdtAuthContext`; raw API keys are only returned to in-process callers that need to construct the actual HTTP request.
 - App onboarding/profile state belongs in the central identity/app profile flow, not in new per-app secrets.
+
+
+## ADT action runner
+
+After an agent has an auth context, `runAdtAction(root, options)` can construct an ADT app request and return a safe receipt. It is dry-run friendly: CLI `adt-action` does not use the network unless `--execute` is present.
+
+Example dry run:
+
+```bash
+agentsareborn adt-action \
+  --root ./local \
+  --agent local_platform_builder_feature_scout \
+  --app agentspropose \
+  --endpoint /api/build \
+  --payload proposal.json
+```
+
+Example execute boundary:
+
+```bash
+agentsareborn adt-action \
+  --root ./local \
+  --agent local_platform_builder_feature_scout \
+  --app agentspropose \
+  --endpoint /api/build \
+  --payload proposal.json \
+  --execute
+```
+
+`--execute` sends `Authorization: Bearer <AgentsIdentify token>` to the selected app and writes a safe receipt under `adt_action_receipts/`; raw credentials are never written to receipts or printed to stdout. Binding/public actions such as votes and integration queue mutation still depend on stable policy and operator authorization.

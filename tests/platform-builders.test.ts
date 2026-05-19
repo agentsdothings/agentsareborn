@@ -6,6 +6,7 @@ import path from "node:path";
 import test from "node:test";
 
 import { buildAdtAuthContext, safeAdtAuthContext } from "../src/auth-bridge.js";
+import { runAdtAction, safeAdtActionReceipt } from "../src/adt-action-runner.js";
 import { birthPlatformBuilders, slugify } from "../src/birth.js";
 import { main } from "../src/cli.js";
 import { firstBreath } from "../src/first-breath.js";
@@ -175,6 +176,135 @@ test("CLI auth-context prints only the safe bearer context", async () => {
     const printed = output.join("\n");
     assert.match(printed, /Bearer ai_test\.\.\.cret/);
     assert.equal(printed.includes("ai_test_consensus_weaver_secret"), false);
+  } finally {
+    console.log = originalLog;
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+
+test("ADT action runner can dry-run without network or raw credentials", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "agentsareborn-action-dry-"));
+  try {
+    await birthPlatformBuilders(root);
+    const secretsPath = path.join(root, "secrets", "agentsidentify-activations.json");
+    await mkdir(path.dirname(secretsPath), { recursive: true });
+    await writeFile(secretsPath, `${JSON.stringify({
+      agents: {
+        local_platform_builder_feature_scout: {
+          localAgentId: "local_platform_builder_feature_scout",
+          credentialRef: "local-secrets:feature-scout",
+          publicAgentId: "public-feature-scout",
+          manifestId: "manifest-feature-scout",
+          apiKey: "ai_test_feature_scout_secret",
+          apiKeyMasked: "ai_test...cret",
+        },
+      },
+    }, null, 2)}\n`);
+
+    const receipt = await runAdtAction(root, {
+      agentId: "local_platform_builder_feature_scout",
+      appSlug: "agentspropose",
+      endpointPath: "/api/build",
+      payload: { targetProduct: "agenticsynthetics", domainId: "generator-option", candidate: { generatorId: "example" } },
+      dryRun: true,
+      secretsPath,
+    });
+
+    assert.equal(receipt.status, "dry_run");
+    assert.equal(receipt.networkUsed, false);
+    assert.equal(receipt.request.method, "POST");
+    assert.equal(receipt.request.url, "https://agentspropose.com/api/build");
+    assert.equal(receipt.request.authorizationHeader, "Bearer ai_test...cret");
+    assert.equal(JSON.stringify(receipt).includes("ai_test_feature_scout_secret"), false);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("ADT action runner posts with central bearer auth and returns a safe receipt", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "agentsareborn-action-post-"));
+  const originalFetch = globalThis.fetch;
+  try {
+    await birthPlatformBuilders(root);
+    const secretsPath = path.join(root, "secrets", "agentsidentify-activations.json");
+    await mkdir(path.dirname(secretsPath), { recursive: true });
+    await writeFile(secretsPath, `${JSON.stringify({
+      agents: {
+        local_platform_builder_consensus_weaver: {
+          localAgentId: "local_platform_builder_consensus_weaver",
+          credentialRef: "local-secrets:consensus-weaver",
+          publicAgentId: "public-consensus-weaver",
+          manifestId: "manifest-consensus-weaver",
+          apiKey: "ai_test_consensus_weaver_secret",
+          apiKeyMasked: "ai_test...cret",
+        },
+      },
+    }, null, 2)}\n`);
+
+    let seenAuthorization = "";
+    globalThis.fetch = (async (input, init) => {
+      seenAuthorization = new Headers(init?.headers).get("Authorization") ?? "";
+      assert.equal(String(input), "https://agentsvote.com/api/ballots/ballot-1/votes");
+      assert.equal(init?.method, "POST");
+      assert.equal(init?.body, JSON.stringify({ choice: "yes" }));
+      return new Response(JSON.stringify({ ok: true, ballot: { id: "ballot-1", yesCount: 1 } }), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      });
+    }) as typeof fetch;
+
+    const receipt = await runAdtAction(root, {
+      agentId: "local_platform_builder_consensus_weaver",
+      appSlug: "agentsvote",
+      endpointPath: "/api/ballots/ballot-1/votes",
+      payload: { choice: "yes" },
+      secretsPath,
+    });
+
+    assert.equal(seenAuthorization, "Bearer ai_test_consensus_weaver_secret");
+    assert.equal(receipt.status, "completed");
+    assert.equal(receipt.networkUsed, true);
+    assert.equal(receipt.response?.status, 200);
+    assert.deepEqual(receipt.response?.body, { ok: true, ballot: { id: "ballot-1", yesCount: 1 } });
+
+    const safe = safeAdtActionReceipt(receipt);
+    assert.equal(safe.request.authorizationHeader, "Bearer ai_test...cret");
+    assert.equal(JSON.stringify(safe).includes("ai_test_consensus_weaver_secret"), false);
+  } finally {
+    globalThis.fetch = originalFetch;
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+
+test("CLI adt-action dry-runs by default and masks credentials", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "agentsareborn-action-cli-"));
+  const originalLog = console.log;
+  const output: string[] = [];
+  console.log = (message?: unknown) => { output.push(String(message ?? "")); };
+  try {
+    await birthPlatformBuilders(root);
+    const secretsPath = path.join(root, "secrets", "agentsidentify-activations.json");
+    const payloadPath = path.join(root, "payload.json");
+    await mkdir(path.dirname(secretsPath), { recursive: true });
+    await writeFile(secretsPath, `${JSON.stringify({
+      agents: {
+        local_platform_builder_feature_scout: {
+          localAgentId: "local_platform_builder_feature_scout",
+          credentialRef: "local-secrets:feature-scout",
+          apiKey: "ai_test_feature_scout_secret",
+          apiKeyMasked: "ai_test...cret",
+        },
+      },
+    }, null, 2)}\n`);
+    await writeFile(payloadPath, `${JSON.stringify({ targetProduct: "agenticsynthetics" })}\n`);
+
+    assert.equal(await main(["adt-action", "--root", root, "--agent", "local_platform_builder_feature_scout", "--app", "agentspropose", "--endpoint", "/api/build", "--payload", payloadPath, "--secrets", secretsPath]), 0);
+    const printed = output.join("\n");
+    assert.match(printed, /"status": "dry_run"/);
+    assert.match(printed, /Bearer ai_test\.\.\.cret/);
+    assert.equal(printed.includes("ai_test_feature_scout_secret"), false);
   } finally {
     console.log = originalLog;
     await rm(root, { recursive: true, force: true });

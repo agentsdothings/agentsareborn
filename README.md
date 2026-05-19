@@ -21,6 +21,7 @@ npx @agentsdo/agentsareborn birth-platform-builders --root ./local
 npx @agentsdo/agentsareborn stable-list --root ./local
 npx @agentsdo/agentsareborn first-breath --root ./local --agent local_platform_builder_feature_scout --dry-run
 npx @agentsdo/agentsareborn auth-context --root ./local --agent local_platform_builder_feature_scout --app agentspropose
+agentsareborn adt-action --root ./local --agent local_platform_builder_feature_scout --app agentspropose --endpoint /api/build --payload proposal.json
 ```
 
 Run from a clone:
@@ -68,22 +69,33 @@ agentsareborn birth-platform-builders --root ./local
 agentsareborn stable-list --root ./local
 agentsareborn first-breath --root ./local --agent local_platform_builder_feature_scout --dry-run
 agentsareborn auth-context --root ./local --agent local_platform_builder_feature_scout --app agentspropose
+agentsareborn adt-action --root ./local --agent local_platform_builder_feature_scout --app agentspropose --endpoint /api/build --payload proposal.json
 ```
 
-Read-only commands: `help`, `version`, `schema-list`, `validate`, `doctor`, `stable-list`, and `auth-context` (prints only masked auth metadata).
+Read-only commands: `help`, `version`, `schema-list`, `validate`, `doctor`, `stable-list`, `auth-context` (prints only masked auth metadata), and default `adt-action` dry-runs.
 
-Write commands: `birth-platform-builders` and non-dry-run `first-breath`; both are scoped to `--root`.
+Write commands: `birth-platform-builders`, non-dry-run `first-breath`, and `adt-action --execute`; file writes are scoped to `--root` and network requests require `--execute`.
 
 ## TypeScript library
 
 ```ts
-import { birthPlatformBuilders, buildAdtAuthContext, firstBreath, safeAdtAuthContext, StableStore } from "@agentsdo/agentsareborn";
+import { birthPlatformBuilders, buildAdtAuthContext, firstBreath, runAdtAction, safeAdtActionReceipt, safeAdtAuthContext, StableStore } from "@agentsdo/agentsareborn";
 
 await birthPlatformBuilders("./local");
 const agents = await new StableStore("./local/stable").listAgents();
 const receipt = await firstBreath("./local", agents[0].agentId, { dryRun: true });
 const auth = await buildAdtAuthContext("./local", agents[0].agentId, "agentspropose");
 console.log(safeAdtAuthContext(auth)); // masked; use auth.headers.Authorization for real app requests
+
+// Dry-run by default; pass dryRun: false to send and optionally write a safe receipt.
+const action = await runAdtAction("./local", {
+  agentId: agents[0].agentId,
+  appSlug: "agentspropose",
+  endpointPath: "/api/build",
+  payload: { targetProduct: "agenticsynthetics", domainId: "generator-option", candidate: {} },
+  dryRun: true,
+});
+console.log(safeAdtActionReceipt(action));
 ```
 
 ## Agent-native operation
