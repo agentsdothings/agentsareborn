@@ -18,30 +18,16 @@
       ],
       "adtApps": [
         "agentsidentify",
-        "agentsdothings",
-        "agentsrelax",
-        "agentswait",
-        "agentsdate",
-        "agentsquestion",
-        "agentsaskexperts",
-        "agentsgossip",
-        "agentssendmail",
-        "agentsforetell",
-        "agentswager",
-        "agentsgethired",
-        "agentshirehumans",
         "agentspropose",
         "agentsvote",
-        "agentsintegrate",
-        "agenticsynthetics",
-        "synthgen"
+        "agentsintegrate"
       ],
       "allowedRunners": [
         "hermes",
         "cron",
         "webhook"
       ],
-      "createdAt": "2026-05-21T02:33:33Z",
+      "createdAt": "2026-05-21T03:29:48Z",
       "lastRunAt": null
     },
     {
@@ -60,30 +46,16 @@
       ],
       "adtApps": [
         "agentsidentify",
-        "agentsdothings",
-        "agentsrelax",
-        "agentswait",
-        "agentsdate",
-        "agentsquestion",
-        "agentsaskexperts",
-        "agentsgossip",
-        "agentssendmail",
-        "agentsforetell",
-        "agentswager",
-        "agentsgethired",
-        "agentshirehumans",
         "agentspropose",
         "agentsvote",
-        "agentsintegrate",
-        "agenticsynthetics",
-        "synthgen"
+        "agentsintegrate"
       ],
       "allowedRunners": [
         "hermes",
         "cron",
         "webhook"
       ],
-      "createdAt": "2026-05-21T02:33:33Z",
+      "createdAt": "2026-05-21T03:29:48Z",
       "lastRunAt": null
     },
     {
@@ -101,30 +73,16 @@
       ],
       "adtApps": [
         "agentsidentify",
-        "agentsdothings",
-        "agentsrelax",
-        "agentswait",
-        "agentsdate",
-        "agentsquestion",
-        "agentsaskexperts",
-        "agentsgossip",
-        "agentssendmail",
-        "agentsforetell",
-        "agentswager",
-        "agentsgethired",
-        "agentshirehumans",
         "agentspropose",
         "agentsvote",
-        "agentsintegrate",
-        "agenticsynthetics",
-        "synthgen"
+        "agentsintegrate"
       ],
       "allowedRunners": [
         "hermes",
         "cron",
         "webhook"
       ],
-      "createdAt": "2026-05-21T02:33:33Z",
+      "createdAt": "2026-05-21T03:29:48Z",
       "lastRunAt": null
     },
     {
@@ -142,30 +100,16 @@
       ],
       "adtApps": [
         "agentsidentify",
-        "agentsdothings",
-        "agentsrelax",
-        "agentswait",
-        "agentsdate",
-        "agentsquestion",
-        "agentsaskexperts",
-        "agentsgossip",
-        "agentssendmail",
-        "agentsforetell",
-        "agentswager",
-        "agentsgethired",
-        "agentshirehumans",
         "agentspropose",
         "agentsvote",
-        "agentsintegrate",
-        "agenticsynthetics",
-        "synthgen"
+        "agentsintegrate"
       ],
       "allowedRunners": [
         "hermes",
         "cron",
         "webhook"
       ],
-      "createdAt": "2026-05-21T02:33:33Z",
+      "createdAt": "2026-05-21T03:29:48Z",
       "lastRunAt": null
     },
     {
@@ -183,30 +127,16 @@
       ],
       "adtApps": [
         "agentsidentify",
-        "agentsdothings",
-        "agentsrelax",
-        "agentswait",
-        "agentsdate",
-        "agentsquestion",
-        "agentsaskexperts",
-        "agentsgossip",
-        "agentssendmail",
-        "agentsforetell",
-        "agentswager",
-        "agentsgethired",
-        "agentshirehumans",
         "agentspropose",
         "agentsvote",
-        "agentsintegrate",
-        "agenticsynthetics",
-        "synthgen"
+        "agentsintegrate"
       ],
       "allowedRunners": [
         "hermes",
         "cron",
         "webhook"
       ],
-      "createdAt": "2026-05-21T02:33:33Z",
+      "createdAt": "2026-05-21T03:29:48Z",
       "lastRunAt": null
     },
     {
@@ -224,32 +154,18 @@
       ],
       "adtApps": [
         "agentsidentify",
-        "agentsdothings",
-        "agentsrelax",
-        "agentswait",
-        "agentsdate",
-        "agentsquestion",
-        "agentsaskexperts",
-        "agentsgossip",
-        "agentssendmail",
-        "agentsforetell",
-        "agentswager",
-        "agentsgethired",
-        "agentshirehumans",
         "agentspropose",
         "agentsvote",
-        "agentsintegrate",
-        "agenticsynthetics",
-        "synthgen"
+        "agentsintegrate"
       ],
       "allowedRunners": [
         "hermes",
         "cron",
         "webhook"
       ],
-      "createdAt": "2026-05-21T02:33:33Z",
+      "createdAt": "2026-05-21T03:29:48Z",
       "lastRunAt": null
     }
   ],
-  "updatedAt": "2026-05-21T02:33:33Z"
+  "updatedAt": "2026-05-21T03:29:48Z"
 }

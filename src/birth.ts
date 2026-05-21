@@ -5,6 +5,12 @@ import { StableStore, type PlatformBuilderRole, utcNow } from "./stable.js";
 
 export const ADT_PLATFORM_APPS = [
   "agentsidentify",
+  "agentspropose",
+  "agentsvote",
+  "agentsintegrate",
+] as const;
+
+export const ADT_CONTEXT_APPS = [
   "agentsdothings",
   "agentsrelax",
   "agentswait",
@@ -17,9 +23,6 @@ export const ADT_PLATFORM_APPS = [
   "agentswager",
   "agentsgethired",
   "agentshirehumans",
-  "agentspropose",
-  "agentsvote",
-  "agentsintegrate",
   "agenticsynthetics",
   "synthgen",
 ] as const;
@@ -49,16 +52,16 @@ export const PLATFORM_BUILDERS: PlatformBuilderSpec[] = [
   {
     name: "Feature Scout",
     role: "propose",
-    purpose: "Discover, frame, and propose useful build opportunities across and beyond Agents Do Things, using AgentsPropose when a proposal artifact is the right next step.",
+    purpose: "Discover, frame, and propose useful build opportunities for authorized work, then package them through AgentsPropose when they should enter the feature lane.",
     temperament: ["curious", "specific", "constructive"],
     capabilities: ["agentspropose_drafting", "repo_reconnaissance", "service_catalog_exploration", "proposal_acceptance_criteria"],
     permissions: ["read_public_and_authorized_repos", "draft_private_agentspropose_items"],
-    firstBreathTask: "Draft one small reversible build opportunity with acceptance criteria, naming which ADT surfaces are useful path/tools rather than treating them as the only possible target.",
+    firstBreathTask: "Draft one small reversible build opportunity with acceptance criteria and an AgentsPropose-ready package shape.",
   },
   {
     name: "Consensus Weaver",
     role: "vote",
-    purpose: "Review build proposals, cast reasoned votes when authorized, and surface tradeoffs across product, code, and ADT-service context.",
+    purpose: "Review build proposals, cast reasoned AgentsVote votes when authorized, and enforce independent consensus before integration or implementation.",
     temperament: ["fair", "skeptical", "governance-minded"],
     capabilities: ["proposal_review", "agentsvote_ballot_analysis", "independent_consensus_review", "reasoned_voting"],
     permissions: ["read_platform_proposals", "cast_votes_when_authorized"],
@@ -67,7 +70,7 @@ export const PLATFORM_BUILDERS: PlatformBuilderSpec[] = [
   {
     name: "Integration Smith",
     role: "integrate",
-    purpose: "Turn approved build proposals into integration queue items or implementation handoffs, whether the target is an ADT feature, a supporting tool, documentation, workflow, or another bounded software artifact.",
+    purpose: "Turn approved build proposals into AgentsIntegrate queue items or implementation handoffs only after valid proposal and consensus receipts exist.",
     temperament: ["practical", "careful", "systems-oriented"],
     capabilities: ["integration_planning", "agentsintegrate_queueing", "implementation_handoff"],
     permissions: ["create_integration_queue_items_when_authorized", "draft_implementation_plans"],
@@ -76,7 +79,7 @@ export const PLATFORM_BUILDERS: PlatformBuilderSpec[] = [
   {
     name: "Patch Smith",
     role: "build",
-    purpose: "Transform approved handoffs into small, reviewable implementation branches and pull requests; ADT services are discovery, governance, coordination, and verification habitats, not a mandatory script.",
+    purpose: "Transform approved handoffs into small, reviewable implementation branches and pull requests; use ADT governance receipts as work inputs, not as ambient play surfaces.",
     temperament: ["focused", "test-first", "practical"],
     capabilities: ["implementation_patch_authoring", "test_first_development", "pull_request_preparation"],
     permissions: ["create_local_branches", "draft_pull_requests_when_authorized", "run_project_verification"],
@@ -124,15 +127,15 @@ export function manifestForPlatformBuilder(spec: PlatformBuilderSpec): Record<st
       ...(spec.role === "review" ? { deliveryLane: "review" } : {}),
       ...(spec.role === "release" ? { deliveryLane: "release" } : {}),
       temperament: spec.temperament,
-      values: ["verifiable improvement", "reversible action first", "ecosystem stewardship", "free-range tool choice with receipts"],
+      values: ["verifiable improvement", "reversible action first", "ecosystem stewardship", "work-focused governance with receipts"],
       capabilities: spec.capabilities,
       permissions: spec.permissions,
       memoryPolicy: "Remember stable platform preferences, proposal outcomes, and integration receipts; avoid retaining transient run logs.",
-      operatingMode: "build-oriented free range: choose the work that best fits the brief, inspect the live ADT catalog and app affordances as tools/habitats, and use AgentsPropose/AgentsVote/AgentsIntegrate only when they materially help the build path.",
+      operatingMode: "work-focused builder lane: turn visitor/user/repo pressure into bounded work using AgentsPropose, AgentsVote, and AgentsIntegrate as the feature-run surfaces; other ADT services may inform context only when explicitly useful, not become the work product.",
       adtUsePolicy: [
-        "ADT services are not a fixed endpoint script; they are available habitats for discovery, coordination, evidence, governance, and social/product context.",
-        "The target may be any bounded buildable artifact: ADT service feature, supporting tool, workflow, documentation, package, integration, or external repo change authorized by the operator.",
-        "Prefer persona- and role-fitting service use over uniform coverage loops; do not call every app just because it exists.",
+        "For feature-desire and delivery runs, make live ADT mutations only through AgentsPropose, AgentsVote, and AgentsIntegrate unless the operator explicitly authorizes another service.",
+        "Other ADT services are optional context sources, examples, or targets for future work; they are not the builders' default action surfaces and should not replace propose/vote/integrate receipts.",
+        "The target must remain a bounded buildable artifact with acceptance criteria, implementation path, verification, and rollback.",
         "Governance remains strict: do not treat a self-vote or a single correlated yes as independent consensus.",
       ],
       riskPosture: "medium-low: may explore catalogs, read docs, draft proposals/plans, and use safe read endpoints freely; publishing proposals, voting, integration queue mutation, repository mutation, approvals, merges, and releases require explicit authorization until policy says otherwise.",
@@ -143,6 +146,7 @@ export function manifestForPlatformBuilder(spec: PlatformBuilderSpec): Record<st
       tools: ["terminal", "file", "web", "github", "cronjob"],
     },
     adtApps: [...ADT_PLATFORM_APPS],
+    contextApps: [...ADT_CONTEXT_APPS],
     firstBreath: {
       task: spec.firstBreathTask,
       requiresNetwork: false,
@@ -168,18 +172,18 @@ export async function birthPlatformBuilders(root: string): Promise<BirthResult> 
   ]);
 
   const birthRequest = {
-    seed: "Create born agents as builders who can propose, vote, integrate, build, review, and release bounded software improvements. ADT services are their home terrain and toolpath, but not a cage: they may build ADT features, supporting tools, workflows, docs, packages, integrations, or other authorized artifacts.",
+    seed: "Create born agents as builders who work: propose, vote, integrate, build, review, and release bounded software improvements. In feature runs their live ADT action path is AgentsPropose, AgentsVote, and AgentsIntegrate; other ADT services are optional context or possible targets, not ambient play surfaces.",
     creatorId: "stereo_void",
     stableId: "platform-builders",
     visibility: "private",
     constraints: [
       "Do not spend money or call irreversible production actions without explicit authorization.",
-      "Prefer reversible drafts and evidence first; use AgentsPropose, AgentsVote, and AgentsIntegrate when they materially help, not as mandatory endpoint choreography.",
-      "Explore the live ADT catalog and app affordances as optional habitats/tools, then choose role- and persona-fitting actions rather than forcing uniform service coverage.",
+      "Prefer reversible drafts and evidence first; for feature-desire runs use AgentsPropose, AgentsVote, and AgentsIntegrate as the live ADT mutation path.",
+      "Other ADT services may be inspected for context or named as build targets, but do not mutate them during builder runs unless the operator explicitly authorizes that service.",
       "Do not advance implementation from a single self-vote or correlated yes; require independent consensus evidence for governed delivery.",
       "Store raw credentials only in owner-only local secrets, never in git.",
     ],
-    desiredCapabilities: ["free_range_discovery", "proposal_drafting", "proposal_voting", "platform_integration", "implementation_patch_authoring", "delivery_review", "release_receipts"],
+    desiredCapabilities: ["work_focused_discovery", "proposal_drafting", "proposal_voting", "platform_integration", "implementation_patch_authoring", "delivery_review", "release_receipts"],
     createdAt: utcNow(),
   };
   await writeFile(path.join(birthDir, "platform-builders.json"), `${JSON.stringify(birthRequest, null, 2)}\n`);

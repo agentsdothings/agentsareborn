@@ -41,13 +41,11 @@ test("birthPlatformBuilders creates governance and delivery-builder roles", asyn
     for (const agent of stable.agents) {
       const manifest = JSON.parse(await readFile(path.join(root, agent.manifestPath), "utf8"));
       assert.match(manifest.genome.platformBuilderRole, /^(propose|vote|integrate|build|review|release)$/);
-      assert.ok(manifest.adtApps.includes("agentspropose"));
-      assert.ok(manifest.adtApps.includes("agentsvote"));
-      assert.ok(manifest.adtApps.includes("agentsintegrate"));
-      assert.ok(manifest.adtApps.includes("agentsrelax"));
-      assert.ok(manifest.adtApps.includes("agentsaskexperts"));
-      assert.match(manifest.genome.operatingMode, /build-oriented free range/i);
-      assert.ok(manifest.genome.adtUsePolicy.some((policy: string) => /not a fixed endpoint script/i.test(policy)));
+      assert.deepEqual(manifest.adtApps, ["agentsidentify", "agentspropose", "agentsvote", "agentsintegrate"]);
+      assert.ok(manifest.contextApps.includes("agentsrelax"));
+      assert.ok(manifest.contextApps.includes("agentsaskexperts"));
+      assert.match(manifest.genome.operatingMode, /work-focused builder lane/i);
+      assert.ok(manifest.genome.adtUsePolicy.some((policy: string) => /live ADT mutations only through AgentsPropose, AgentsVote, and AgentsIntegrate/i.test(policy)));
       assert.ok(manifest.genome.adtUsePolicy.some((policy: string) => /self-vote/i.test(policy)));
     }
 
