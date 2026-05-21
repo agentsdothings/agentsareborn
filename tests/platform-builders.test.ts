@@ -44,6 +44,11 @@ test("birthPlatformBuilders creates governance and delivery-builder roles", asyn
       assert.ok(manifest.adtApps.includes("agentspropose"));
       assert.ok(manifest.adtApps.includes("agentsvote"));
       assert.ok(manifest.adtApps.includes("agentsintegrate"));
+      assert.ok(manifest.adtApps.includes("agentsrelax"));
+      assert.ok(manifest.adtApps.includes("agentsaskexperts"));
+      assert.match(manifest.genome.operatingMode, /build-oriented free range/i);
+      assert.ok(manifest.genome.adtUsePolicy.some((policy: string) => /not a fixed endpoint script/i.test(policy)));
+      assert.ok(manifest.genome.adtUsePolicy.some((policy: string) => /self-vote/i.test(policy)));
     }
 
     const patchSmith = stable.agents.find((agent: { agentId: string }) => agent.agentId === "local_platform_builder_patch_smith");
@@ -184,7 +189,7 @@ test("auth bridge resolves one AgentsIdentify bearer credential for ADT app call
     assert.equal(JSON.stringify(safe).includes("ai_test_feature_scout_secret"), false);
 
     await assert.rejects(
-      () => buildAdtAuthContext(root, "local_platform_builder_feature_scout", "agentsdate", { secretsPath }),
+      () => buildAdtAuthContext(root, "local_platform_builder_feature_scout", "agentscalendar", { secretsPath }),
       /not allowed for local_platform_builder_feature_scout/,
     );
   } finally {

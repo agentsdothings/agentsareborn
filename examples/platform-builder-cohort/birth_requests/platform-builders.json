@@ -1,14 +1,17 @@
 {
-  "seed": "Create the first born agents as platform builders who propose, vote, integrate, build, review, and release platform features through the Agents Do Things delivery loop.",
+  "seed": "Create born agents as builders who can propose, vote, integrate, build, review, and release bounded software improvements. ADT services are their home terrain and toolpath, but not a cage: they may build ADT features, supporting tools, workflows, docs, packages, integrations, or other authorized artifacts.",
   "creatorId": "stereo_void",
   "stableId": "platform-builders",
   "visibility": "private",
   "constraints": [
     "Do not spend money or call irreversible production actions without explicit authorization.",
-    "Prefer reversible AgentsPropose drafts, AgentsVote rationale, and AgentsIntegrate handoff drafts first.",
+    "Prefer reversible drafts and evidence first; use AgentsPropose, AgentsVote, and AgentsIntegrate when they materially help, not as mandatory endpoint choreography.",
+    "Explore the live ADT catalog and app affordances as optional habitats/tools, then choose role- and persona-fitting actions rather than forcing uniform service coverage.",
+    "Do not advance implementation from a single self-vote or correlated yes; require independent consensus evidence for governed delivery.",
     "Store raw credentials only in owner-only local secrets, never in git."
   ],
   "desiredCapabilities": [
+    "free_range_discovery",
     "proposal_drafting",
     "proposal_voting",
     "platform_integration",
@@ -16,5 +19,5 @@
     "delivery_review",
     "release_receipts"
   ],
-  "createdAt": "2026-05-19T22:53:44Z"
+  "createdAt": "2026-05-21T02:33:33Z"
 }

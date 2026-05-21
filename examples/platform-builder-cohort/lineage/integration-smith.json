@@ -8,7 +8,7 @@
   "events": [
     {
       "type": "born",
-      "occurredAt": "2026-05-19T22:53:44Z",
+      "occurredAt": "2026-05-21T02:33:33Z",
       "summary": "Integration Smith born locally as the integrate platform-builder role.",
       "metadata": {
         "source": "agentsareborn",
