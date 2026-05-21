@@ -13,24 +13,36 @@
       "capabilities": [
         "proposal_review",
         "agentsvote_ballot_analysis",
+        "independent_consensus_review",
         "reasoned_voting"
       ],
       "adtApps": [
         "agentsidentify",
+        "agentsdothings",
+        "agentsrelax",
+        "agentswait",
+        "agentsdate",
+        "agentsquestion",
+        "agentsaskexperts",
+        "agentsgossip",
+        "agentssendmail",
+        "agentsforetell",
+        "agentswager",
+        "agentsgethired",
+        "agentshirehumans",
         "agentspropose",
         "agentsvote",
         "agentsintegrate",
         "agenticsynthetics",
-        "agentsquestion",
-        "agentsgossip"
+        "synthgen"
       ],
       "allowedRunners": [
         "hermes",
         "cron",
         "webhook"
       ],
-      "createdAt": "2026-05-19T22:53:44Z",
-      "lastRunAt": "2026-05-19T22:53:44Z"
+      "createdAt": "2026-05-21T02:33:33Z",
+      "lastRunAt": null
     },
     {
       "agentId": "local_platform_builder_feature_scout",
@@ -43,24 +55,36 @@
       "capabilities": [
         "agentspropose_drafting",
         "repo_reconnaissance",
+        "service_catalog_exploration",
         "proposal_acceptance_criteria"
       ],
       "adtApps": [
         "agentsidentify",
+        "agentsdothings",
+        "agentsrelax",
+        "agentswait",
+        "agentsdate",
+        "agentsquestion",
+        "agentsaskexperts",
+        "agentsgossip",
+        "agentssendmail",
+        "agentsforetell",
+        "agentswager",
+        "agentsgethired",
+        "agentshirehumans",
         "agentspropose",
         "agentsvote",
         "agentsintegrate",
         "agenticsynthetics",
-        "agentsquestion",
-        "agentsgossip"
+        "synthgen"
       ],
       "allowedRunners": [
         "hermes",
         "cron",
         "webhook"
       ],
-      "createdAt": "2026-05-19T22:53:44Z",
-      "lastRunAt": "2026-05-19T22:53:44Z"
+      "createdAt": "2026-05-21T02:33:33Z",
+      "lastRunAt": null
     },
     {
       "agentId": "local_platform_builder_integration_smith",
@@ -77,20 +101,31 @@
       ],
       "adtApps": [
         "agentsidentify",
+        "agentsdothings",
+        "agentsrelax",
+        "agentswait",
+        "agentsdate",
+        "agentsquestion",
+        "agentsaskexperts",
+        "agentsgossip",
+        "agentssendmail",
+        "agentsforetell",
+        "agentswager",
+        "agentsgethired",
+        "agentshirehumans",
         "agentspropose",
         "agentsvote",
         "agentsintegrate",
         "agenticsynthetics",
-        "agentsquestion",
-        "agentsgossip"
+        "synthgen"
       ],
       "allowedRunners": [
         "hermes",
         "cron",
         "webhook"
       ],
-      "createdAt": "2026-05-19T22:53:44Z",
-      "lastRunAt": "2026-05-19T22:53:44Z"
+      "createdAt": "2026-05-21T02:33:33Z",
+      "lastRunAt": null
     },
     {
       "agentId": "local_platform_builder_patch_smith",
@@ -107,20 +142,31 @@
       ],
       "adtApps": [
         "agentsidentify",
+        "agentsdothings",
+        "agentsrelax",
+        "agentswait",
+        "agentsdate",
+        "agentsquestion",
+        "agentsaskexperts",
+        "agentsgossip",
+        "agentssendmail",
+        "agentsforetell",
+        "agentswager",
+        "agentsgethired",
+        "agentshirehumans",
         "agentspropose",
         "agentsvote",
         "agentsintegrate",
         "agenticsynthetics",
-        "agentsquestion",
-        "agentsgossip"
+        "synthgen"
       ],
       "allowedRunners": [
         "hermes",
         "cron",
         "webhook"
       ],
-      "createdAt": "2026-05-19T22:53:44Z",
-      "lastRunAt": "2026-05-19T22:53:44Z"
+      "createdAt": "2026-05-21T02:33:33Z",
+      "lastRunAt": null
     },
     {
       "agentId": "local_platform_builder_release_smith",
@@ -137,20 +183,31 @@
       ],
       "adtApps": [
         "agentsidentify",
+        "agentsdothings",
+        "agentsrelax",
+        "agentswait",
+        "agentsdate",
+        "agentsquestion",
+        "agentsaskexperts",
+        "agentsgossip",
+        "agentssendmail",
+        "agentsforetell",
+        "agentswager",
+        "agentsgethired",
+        "agentshirehumans",
         "agentspropose",
         "agentsvote",
         "agentsintegrate",
         "agenticsynthetics",
-        "agentsquestion",
-        "agentsgossip"
+        "synthgen"
       ],
       "allowedRunners": [
         "hermes",
         "cron",
         "webhook"
       ],
-      "createdAt": "2026-05-19T22:53:44Z",
-      "lastRunAt": "2026-05-19T22:53:44Z"
+      "createdAt": "2026-05-21T02:33:33Z",
+      "lastRunAt": null
     },
     {
       "agentId": "local_platform_builder_review_weaver",
@@ -167,21 +224,32 @@
       ],
       "adtApps": [
         "agentsidentify",
+        "agentsdothings",
+        "agentsrelax",
+        "agentswait",
+        "agentsdate",
+        "agentsquestion",
+        "agentsaskexperts",
+        "agentsgossip",
+        "agentssendmail",
+        "agentsforetell",
+        "agentswager",
+        "agentsgethired",
+        "agentshirehumans",
         "agentspropose",
         "agentsvote",
         "agentsintegrate",
         "agenticsynthetics",
-        "agentsquestion",
-        "agentsgossip"
+        "synthgen"
       ],
       "allowedRunners": [
         "hermes",
         "cron",
         "webhook"
       ],
-      "createdAt": "2026-05-19T22:53:44Z",
-      "lastRunAt": "2026-05-19T22:53:44Z"
+      "createdAt": "2026-05-21T02:33:33Z",
+      "lastRunAt": null
     }
   ],
-  "updatedAt": "2026-05-19T22:53:44Z"
+  "updatedAt": "2026-05-21T02:33:33Z"
 }
