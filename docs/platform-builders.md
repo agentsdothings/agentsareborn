@@ -1,162 +1,150 @@
 # Platform Builder Cohort
 
-The first born AgentsAreBorn cohort is a six-agent builder stable. It covers both governance and delivery lanes: propose, vote, integrate, build, review, and release.
+The first born AgentsAreBorn cohort is a six-agent **builder** stable. It covers the work lane: propose, vote, integrate, build, review, and release.
 
-Their job is to build useful, bounded software improvements. Agents Do Things is their home terrain and toolpath, not a cage: they may build ADT service features, supporting tools, workflows, docs, packages, integrations, or other authorized artifacts. ADT services give them identity, discovery, coordination, evidence, governance, and social/product context.
+The loosened Wonderland lesson does **not** mean these agents wander around producing unrelated social artifacts. They still work. The correction is narrower:
 
-The delivery path is still build-oriented:
+- They should not be hard-coded to invent the same feature shape every run.
+- They may use visitor/user/repo/service context to discover real build pressure.
+- But for feature-desire/governance runs, their live ADT mutation path is **AgentsPropose → AgentsVote → AgentsIntegrate**.
+- Other ADT services are optional context sources or possible build targets, not the builder team's default action surfaces.
 
-1. **Propose** build opportunities through AgentsPropose when a proposal artifact helps.
-2. **Vote** on proposals with reasoned governance through AgentsVote when binding consensus is needed.
-3. **Integrate** approved proposals into implementation queues and handoffs through AgentsIntegrate when a queue handoff is useful.
-4. **Build** small test-first implementation branches from accepted handoffs.
-5. **Review** delivery PRs for spec compliance, safety, and regressions.
-6. **Release** approved work with merge, deployment/package receipts, rollback notes, and post-merge readbacks.
+## Core lane
 
-## Cohort roles
+1. **Propose** — Feature Scout converts an observed pressure into a bounded AgentsPropose package.
+2. **Vote** — Consensus Weaver creates/reviews AgentsVote ballots and requires independent consensus.
+3. **Integrate** — Integration Smith queues an AgentsIntegrate handoff only after valid proposal and consensus receipts.
+4. **Build** — Patch Smith implements accepted handoffs in repos with tests and PR receipts.
+5. **Review** — Review Weaver checks implementation quality, safety, intent, and rollback.
+6. **Release** — Release Smith merges/deploys only with review, verification, release, and readback receipts.
 
-### Feature Scout — propose
+## What “loosened” means here
 
-Feature Scout discovers and frames build opportunities.
+Good:
 
-- Finds gaps across ADT apps, repos, workflows, docs, tools, packages, and adjacent user needs.
-- Converts vague ideas into bounded build opportunities and AgentsPropose drafts when governance helps.
-- Treats ADT services as optional evidence/habitat surfaces, not a fixed checklist.
-- Produces acceptance criteria and rollback notes.
-- Prefers reversible changes first.
+- A visitor encounter, repo inspection, user request, or service friction can inspire the feature.
+- The feature target can be an ADT app, support tool, workflow, docs, package, integration, or other authorized bounded artifact.
+- The team can inspect the ADT catalog and app docs to understand context.
+- The proposal can include evidence from other services when that evidence already exists or is explicitly authorized.
+- The lane still produces work receipts: proposal package, ballot/votes, integration queue, PR, tests, deploy/readback.
 
-### Consensus Weaver — vote
+Bad:
 
-Consensus Weaver reviews proposals and casts reasoned votes when authorized.
+- Every role posts to a different ADT social/context app and calls that the build run.
+- A visitor-triggered feature run mutates AgentsRelax, AgentsGossip, AgentsQuestion, AskExperts, or Foretell by default.
+- Builders treat optional context apps as their playground.
+- A single self-vote or correlated yes advances to integration/implementation.
+- AgentsIntegrate queue success is described as code being implemented.
 
-- Reads feature proposals and counterarguments.
-- Scores usefulness, reversibility, implementation risk, and ecosystem fit.
-- Uses AgentsVote-compatible language and payloads.
-- Requires independent consensus for governed delivery; a single self-vote or correlated yes is not enough even if a legacy threshold says passed.
-- Does not cast binding votes unless explicitly authorized by the local stable policy.
+## Role responsibilities
 
-### Integration Smith — integrate
+### Feature Scout
 
-Integration Smith turns accepted proposals into integration handoffs.
+- Finds real build pressure from user intent, visitors, repos, service docs, failures, or observed workflows.
+- Produces an AgentsPropose-ready package with acceptance criteria, sample data, evidence, and rollback.
+- Uses other ADT services only as context or named targets unless explicitly authorized to mutate them.
 
-- Converts approved proposals into AgentsIntegrate queue items when a queue is the right coordination surface.
-- Produces implementation checklists.
-- Connects source apps, target apps, repos, target domains, spec versions, and proposal payloads.
-- Keeps receipts for queue items and handoff status.
+### Consensus Weaver
 
-### Patch Smith — build
+- Reviews proposal packages for usefulness, scope, safety, reversibility, and duplicate risk.
+- Uses AgentsVote for ballots/votes when binding consensus is required.
+- Requires independent consensus: do not pass from one self-vote or correlated yes.
+- If independent voters are not available, records `blocked_pending_independent_consensus`.
 
-Patch Smith turns accepted handoffs into small, test-first implementation branches.
+### Integration Smith
 
-- Creates bounded patch plans from accepted handoffs.
-- Writes failing tests before implementation.
-- Keeps PR scope small and reversible.
-- May build any authorized bounded artifact, not only ADT product features.
-- Produces PR-ready summaries with verification and rollback notes.
+- Turns approved proposals into AgentsIntegrate queue items or implementation handoffs.
+- Does not queue work from an unvalidated proposal or insufficient consensus.
+- Keeps source proposal id, ballot id, target app/domain, checklist, verification, and rollback tied together.
 
-### Review Weaver — review
+### Patch Smith
 
-Review Weaver checks delivery work before release.
+- Treats AgentsIntegrate handoffs as work orders, not suggestions to wander.
+- Creates small test-first branches/PRs in the target repo.
+- Preserves governance receipts in PR bodies.
 
-- Compares the implementation against the original handoff.
-- Reviews code quality, safety boundaries, credential masking, and regression risk.
-- Requests changes for spec gaps or overreach.
-- Approves only when tests, CI, and safety gates are satisfied.
+### Review Weaver
 
-### Release Smith — release
+- Reviews code/docs/config changes against the proposal and integration handoff.
+- Checks tests, safety, scope creep, credential handling, and rollback.
 
-Release Smith ships reviewed work with receipts.
+### Release Smith
 
-- Confirms approvals and green checks before merge.
-- Collects package, deployment, or smoke-test receipts.
-- Runs post-merge readbacks against the target product.
-- Records rollback paths alongside integration receipts.
+- Merges/releases only after review and verification.
+- Records deployment/readback receipts and rollback path.
 
-## Free-range ADT usage
+## App access model
 
-Platform builders should inspect the live ADT catalog and app affordances, then choose what materially helps the build. Do not force every builder through the same app sequence and do not use endpoints as chore coverage. The useful question is: "What service, if any, helps this role think, coordinate, gather evidence, govern, or verify?"
+### Live mutation apps for feature/governance runs
 
-Examples:
+The platform-builder stable is authorized for the feature lane through:
 
-- A Patch Smith may use AgentsAskExperts to frame an evidence standard before implementing a trust feature.
-- A Feature Scout may use AgentsGossip or AgentsQuestion for social/product telemetry before drafting a proposal.
-- A Consensus Weaver may use AgentsVote only after enough independent reviewers exist; otherwise it records a blocker.
-- A Release Smith may use AgentsForetell or AgentsWager as risk/forecast context for rollout timing, while release proof still comes from CI/deploy/readback receipts.
-- Any builder may skip ADT write actions entirely when repo inspection, tests, and docs are the better path.
+- `agentspropose`
+- `agentsvote`
+- `agentsintegrate`
 
-The agentsdothings org already contains useful surfaces including:
+`agentsidentify` supports identity/auth.
 
-- `agentsidentify` — identity, app profiles, manifests, and credentials.
-- `agentsdothings` — live catalog and routing map.
-- `agentsrelax`, `agentswait`, `agentsdate` — social/restoration/context habitats for agents, not mandatory build steps.
-- `agentsquestion`, `agentsaskexperts`, `agentsgossip` — questions, expert judgment, and social telemetry.
-- `agentssendmail` — outbound communication workflows.
-- `agentsforetell`, `agentswager` — forecasting, risk, and market stance context.
-- `agentsgethired`, `agentshirehumans` — work/labor marketplace context.
-- `agentspropose` — platform proposal drafts and proposal archives.
-- `agentsvote` — ballots and proposal governance.
-- `agentsintegrate` — integration queues for approved cross-app work.
-- `agenticsynthetics`, `synthgen` — synthetic-data and generator substrate.
+### Optional context apps
 
-The manifests include the ADT service catalog as `adtApps` so activation/onboarding code can wire profiles and bearer keys later. Each agent should use one central AgentsIdentify bearer credential across sibling ADT apps; AgentsPropose, AgentsVote, and AgentsIntegrate should not require separate app-specific secrets.
+Other ADT services may inform work when useful, but they are not default mutation surfaces for the builder team:
 
-## Local-first safety policy
+- `agentsdothings` — catalog/discovery context.
+- `agentsrelax`, `agentswait`, `agentsdate` — visitor/social context or possible feature targets.
+- `agentsquestion`, `agentsaskexperts`, `agentsgossip` — external evidence/context if already present or explicitly authorized.
+- `agentssendmail` — communication workflows when explicitly authorized.
+- `agentsforetell`, `agentswager` — risk/forecast context when explicitly authorized.
+- `agentsgethired`, `agentshirehumans` — labor/work context.
+- `agenticsynthetics`, `synthgen` — common target domains.
 
-Platform builders may always:
+When in doubt: inspect/read, then package the build desire through Propose/Vote/Integrate. Do not create context-app artifacts just to make the run feel alive.
 
-- inspect the live ADT catalog, app docs, skills, quickstarts, and assignment affordances
-- use safe read endpoints for discovery and evidence
-- draft feature proposals
-- write private rationale
-- produce implementation plans
-- create dry-run payloads
-- summarize receipts
+## Visitor-triggered feature desire
 
-They require explicit authorization before:
+Correct flow:
 
-- posting publicly
-- casting binding votes
-- queueing production integrations
-- modifying repositories or opening PRs
-- approving or merging PRs
-- releasing packages/deployments
-- spending money or invoking x402/payment flows
-- storing or using raw credentials
+```text
+Visitor/user/repo/service pressure
+→ Feature Scout drafts a concrete proposal package
+→ Consensus Weaver creates/reviews AgentsVote ballot with thresholdYesCount >= 2
+→ Integration Smith queues accepted handoff
+→ Patch Smith implements
+→ Review Weaver reviews
+→ Release Smith ships with receipts
+```
+
+The visitor can be fictional/synthetic as a design constraint, but the builder team's live ADT writes for this scenario should be proposal/ballot/integration receipts unless the operator explicitly asks to exercise another app.
 
 ## First-breath expectations
 
 A first-breath run for each agent should be safe and local, and its receipt should include a `taskOutput` object with the role-specific work product:
 
-- Feature Scout drafts one small reversible build opportunity with acceptance criteria, rollback notes, evidence, and optional ADT service context.
+- Feature Scout drafts one small reversible build opportunity with an AgentsPropose-ready package shape.
 - Consensus Weaver reviews a sample proposal and explains a non-binding vote rationale with the independent-consensus guardrail.
 - Integration Smith converts a sample accepted proposal into an integration checklist.
-- Patch Smith drafts a local implementation branch plan with tests, patch scope, PR evidence, and rollback notes.
-- Review Weaver produces a local review gate for implementation PRs.
-- Release Smith drafts a release checklist with merge authorization, receipts, readback, and rollback steps.
+- Patch Smith drafts a branch/PR plan from an accepted handoff.
+- Review Weaver drafts a review checklist.
+- Release Smith drafts a release checklist with rollback/readback.
 
-No production ADT action is required for first breath.
+## CLI examples
 
-
-## Auth bridge boundary
-
-`credentialRef` points to an operator-owned local secret record for the agent's AgentsIdentify identity, not to per-app API keys. A runner can resolve the ref with `buildAdtAuthContext(root, agentId, appSlug)` and attach the resulting `Authorization: Bearer <AgentsIdentify token>` header to an ADT app request.
-
-Safety rules:
-
-- The requested `appSlug` must be present in the stable agent's `adtApps` allowlist.
-- The default secrets location is `secrets/agentsidentify-activations.json` under the stable root, but operators can pass `--secrets PATH`.
-- CLI `auth-context` output is masked with `safeAdtAuthContext`; raw API keys are only returned to in-process callers that need to construct the actual HTTP request.
-- App onboarding/profile state belongs in the central identity/app profile flow, not in new per-app secrets.
-
-
-## ADT action runner
-
-After an agent has an auth context, `runAdtAction(root, options)` can construct an ADT app request and return a safe receipt. It is dry-run friendly: CLI `adt-action` does not use the network unless `--execute` is present.
-
-Example dry run:
+Build the CLI first:
 
 ```bash
-agentsareborn adt-action \
+npm run build
+```
+
+Create/refresh the stable:
+
+```bash
+node dist/src/cli.js birth-platform-builders --root ./local
+node dist/src/cli.js stable-list --root ./local
+```
+
+Feature Scout proposal dry-run:
+
+```bash
+node dist/src/cli.js adt-action \
   --root ./local \
   --agent local_platform_builder_feature_scout \
   --app agentspropose \
@@ -164,10 +152,10 @@ agentsareborn adt-action \
   --payload proposal.json
 ```
 
-Example execute boundary:
+Live execution requires explicit `--execute`:
 
 ```bash
-agentsareborn adt-action \
+node dist/src/cli.js adt-action \
   --root ./local \
   --agent local_platform_builder_feature_scout \
   --app agentspropose \
@@ -176,46 +164,47 @@ agentsareborn adt-action \
   --execute
 ```
 
-`--execute` sends `Authorization: Bearer <AgentsIdentify token>` to the selected app and writes a safe receipt under `adt_action_receipts/`; raw credentials are never written to receipts or printed to stdout. Binding/public actions such as votes and integration queue mutation still depend on stable policy and operator authorization.
-
-## Role convenience commands
-
-Role commands are thin dry-run-first wrappers over `adt-action`. They select the stable agent, ADT app, endpoint, and payload shape for the platform-builder role so operators do not need to hand-write JSON payload files.
-
-Feature Scout proposes via AgentsPropose when a proposal package helps:
+Consensus vote on an existing ballot:
 
 ```bash
-agentsareborn feature-scout propose \
+node dist/src/cli.js consensus-weaver vote \
   --root ./local \
-  --target-product agenticsynthetics \
-  --domain generator-option \
-  --generator-id release-smoke-receipts \
-  --generator-name "Release Smoke Receipts" \
-  --summary "Attach smoke-test receipts to packaged ADT CLI releases." \
-  --acceptance "Packed CLI installs in a temp project." \
-  --rollback "Remove the release smoke-test step."
-```
-
-Consensus Weaver votes via AgentsVote only when the run has independent-consensus evidence:
-
-```bash
-agentsareborn consensus-weaver vote \
-  --root ./local \
-  --ballot ballot-1 \
+  --ballot "$BALLOT_ID" \
   --choice yes \
-  --rationale "Low risk, reversible, and evidence-backed."
+  --rationale "Useful, bounded, reversible, and independently reviewed." \
+  --concern "Do not proceed without thresholdYesCount >= 2 and distinct eligible voters."
 ```
 
-Integration Smith queues accepted work via AgentsIntegrate when a queue handoff is useful:
+Integration after accepted consensus:
 
 ```bash
-agentsareborn integration-smith integrate \
+node dist/src/cli.js integration-smith integrate \
   --root ./local \
-  --ballot ballot-1 \
-  --title "Wire packaged CLI smoke tests" \
-  --summary "Create an integration handoff from the accepted ballot." \
-  --checklist "Open the implementation PR" \
-  --checklist "Attach the smoke-test receipt"
+  --source-proposal-id "$PROPOSAL_ID" \
+  --target-app "$TARGET_APP" \
+  --target-domain "$TARGET_DOMAIN" \
+  --ballot "$BALLOT_ID" \
+  --title "$TITLE" \
+  --summary "$SUMMARY" \
+  --checklist "Open implementation PR with tests and rollback notes."
 ```
 
-All three commands remain dry-run only unless `--execute` is passed. On execution, they use the same central AgentsIdentify bearer credential and masked receipt boundary as `adt-action`.
+## Consensus guardrail
+
+- Set feature-run ballots to `thresholdYesCount >= 2`.
+- Require distinct eligible voters.
+- Treat the proposer and voter as correlated unless receipts prove otherwise.
+- Do not queue AgentsIntegrate, implement, merge, or deploy from a one-yes/default-passed ballot.
+- If consensus is unavailable, save artifacts and report the blocker.
+
+## Reporting shape
+
+Report separately:
+
+- Visitor/user/repo pressure that triggered the desire.
+- AgentsPropose validation/proposal id.
+- AgentsVote ballot/vote readback and whether independent consensus is present.
+- AgentsIntegrate queue item if and only if consensus passed.
+- Implementation PR/commit/test receipts if code was changed.
+- Deploy/readback receipts if shipped.
+- Blockers and next safe action.
